@@ -100,70 +100,60 @@ const Tabata = ({children}) => {
 
 
   return (
-    <React.Fragment>
-      <Panel>
-          <DisplayTime>
-            <Section>
-                  <Label>Total Time Left:</Label>
-                  <Rounds>{formatTime(totalTime)}</Rounds>
-              </Section>
-              <Section>
-              <Label> Time Left in { resting ? 'Rest' : 'Round'}:</Label>
-                  <LargeText> {formatTime(time)}</LargeText>
-              </Section>
-              <Section>
-                  <Label>Rounds:</Label>
-            <Rounds>{currentRound}/{state.rounds}</Rounds>
-              </Section>
-          </DisplayTime>
-          <Section>
-              <LargeLabel>Select Rounds:</LargeLabel>
-              <FlexCenter>
-                  <LargeText>{state.rounds}</LargeText>
-                  <Column>
-                      <Button type='arrow' onClick={incrementRounds}>&#9650;</Button>
-                      <Button type='arrow' onClick={decrementRounds}>&#9660;</Button>
-                  </Column>
-              </FlexCenter>
+    <Panel>
+      <DisplayTime>
+        <Section>
+          <Label>Total Time Left:</Label>
+          <Rounds>{formatTime(totalTime)}</Rounds>
         </Section>
         <Section>
-          <LargeLabel>Set Round Time: {format(hh, mm, ss)}</LargeLabel>
+          <Label> Time Left in {resting ? 'Rest' : 'Round'}:</Label>
+          <LargeText> {formatTime(time)}</LargeText>
+        </Section>
+        <Section>
+          <Label>Rounds:</Label>
+          <Rounds>{currentRound}/{state.rounds}</Rounds>
+        </Section>
+      </DisplayTime>
+      <Section>
+        <LargeLabel>Select Rounds:</LargeLabel>
+        <FlexCenter>
+          <LargeText>{state.rounds}</LargeText>
+          <Column>
+              <Button type='arrow' onClick={incrementRounds}>&#9650;</Button>
+              <Button type='arrow' onClick={decrementRounds}>&#9660;</Button>
+          </Column>
+        </FlexCenter>
+      </Section>
+      <Section>
+        <LargeLabel>Set Round Time: {format(hh, mm, ss)}</LargeLabel>
+        <Container>
+            <Input value={hh} name="Hours" onChange={(e) => setHH(e.target.value)}/>
+            <Input value={mm} name="Minutes" onChange={(e) => setMM(e.target.value)}/>
+            <Input value={ss} name="Seconds" onChange={(e) => setSS(e.target.value)}/>
+        </Container>
+      </Section>
+      <Section>
+        <Border>
+          <LargeLabel>Set Rest Time: {format(0, restMM, restSS)}</LargeLabel>
           <Container>
-              <Input value={hh} name="Hours" onChange={(e) => setHH(e.target.value)}/>
-              <Input value={mm} name="Minutes" onChange={(e) => setMM(e.target.value)}/>
-              <Input value={ss} name="Seconds" onChange={(e) => setSS(e.target.value)}/>
+            <Input name="Minutes" value={restMM} onChange={(e) => { setRestMM(e.target.value); }} />
+            <Input name="Seconds" value={restSS} onChange={(e) => { setRestSS(e.target.value);  }}/>
           </Container>
-        </Section>
-        <Section>
-                 <Border>
-                     <LargeLabel>Set Rest Time: {format(0, restMM, restSS)}</LargeLabel>
-                    <Container>
-              <Input name="Minutes" value={restMM} onChange={(e) => { setRestMM(e.target.value); }} />
-              <Input name="Seconds" value={restSS} onChange={(e) => { setRestSS(e.target.value);  }}/>
-                    </Container>
-                </Border>     
-                </Section>
-          
-    <Section>    
-<FlexBetween>
-<Button
+        </Border>
+      </Section>
+      <Section>
+        <FlexBetween>
+          <Button
             type={state.isRunning ? 'stop' : 'start'}
             onClick={() => { setState({ type: state.isRunning ? 'stop' : 'start'}) }}>
-          {state.isRunning ? 'Stop' : 'Start'  }
-              </Button>
-              
-              <Button onClick={countReset}>Reset</Button>
-              
-            <Button onClick={fastForward} >Skip</Button>
-  </FlexBetween>
-    </Section>
-    
-
-
-
-
-</Panel>
-</React.Fragment>);
+          </Button>
+          <Button onClick={countReset}>Reset</Button>
+          <Button onClick={fastForward} >Skip</Button>
+        </FlexBetween>
+      </Section>
+    </Panel>
+  );
 }
   
-  export default Tabata;
+export default Tabata;

@@ -53,30 +53,28 @@ const Countdown = () => {
       <DisplayTime>
         <Section>
           <LargeText>
-            {formatTime(time)}<br />
+            {formatTime(time)}
          </LargeText>
-         </Section>
-          </DisplayTime>
+        </Section>
+      </DisplayTime>
       <Container>
-               <Input value={hh} name="Hours" onChange={(e) => setHH(e.target.value)}/>
-              <Input value={mm} name="Minutes" onChange={(e) => setMM(e.target.value)}/>
-              <Input value={ss} name="Seconds" onChange={(e) => setSS(e.target.value)}/>
+        <Input value={hh} name="Hours" onChange={(e) => setHH(e.target.value)}/>
+        <Input value={mm} name="Minutes" onChange={(e) => setMM(e.target.value)}/>
+        <Input value={ss} name="Seconds" onChange={(e) => setSS(e.target.value)}/>
       </Container>
       <Section>
-      <FlexBetween>
-      <Button
+        <FlexBetween>
+          <Button
             type={state.isRunning ? 'stop' : 'start'}
             onClick={() => {
               setState({ type: state.isRunning ? 'stop' : 'start' })
             }}>
-          {state.isRunning ? 'Stop' : 'Start'  }
           </Button>
-
-          <Button
-            onClick={countReset}>Reset
+          <Button onClick={countReset}>
+            Reset
           </Button>
-            </FlexBetween>
-   </Section>
+        </FlexBetween>
+      </Section>
     </Panel>
   );
 }

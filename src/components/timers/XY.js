@@ -119,8 +119,7 @@ const XY = ({children}) => {
     <Section>    
     <FlexBetween>
         <Button type={state.isRunning ? 'stop' : 'start'}
-        onClick={() => { setState({ type: state.isRunning ? 'stop' : 'start'}) }}>
-        {state.isRunning ? 'Stop' : 'Start' }</Button>
+        onClick={() => { setState({ type: state.isRunning ? 'stop' : 'start'}) }}></Button>
         <Button onClick={countReset}>Reset</Button>
         <Button onClick={fastForward} >Skip</Button>
   </FlexBetween>

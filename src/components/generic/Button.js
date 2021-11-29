@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { TimerContext } from '../../context/TimerProvider';
 
 const ButtonBase = styled.button `
   display: inline-flex;
@@ -84,6 +85,15 @@ const ButtonArrow = styled(ButtonBase)`
 const Button = (props) => {
   const { children, type, ...buttonProps } = props;
 
+
+  const {
+    decrementRounds,
+    incrementRounds,
+  } = useContext(TimerContext);
+
+
+
+
   switch (type) {
     default:
       return (
@@ -96,30 +106,38 @@ const Button = (props) => {
       return (
         <ButtonStart
           {...buttonProps}>
-          {children}
+          Start
         </ButtonStart>
       );
     case 'stop':
       return (
         <ButtonStop
          {...buttonProps}>
-           {children}
-          </ButtonStop>
+          Stop
+        </ButtonStop>
       );
-      case 'active':
-        return (
-          <ButtonSelected
-            {...buttonProps}>
-              {children}
-            </ButtonSelected>
-        );
-        case 'arrow':
-          return (
-            <ButtonArrow
-              {...buttonProps}>
-                {children}
-              </ButtonArrow>
-          );
+    case 'active':
+      return (
+        <ButtonSelected
+          {...buttonProps}>
+            {children}
+          </ButtonSelected>
+      );
+    case 'arrowUp':
+      return (
+        <ButtonArrow
+          {...buttonProps}>
+          {children}
+          &#9650;
+        </ButtonArrow>
+      );
+    case 'arrowDown':
+      return (
+        <ButtonArrow
+          {...buttonProps}>
+            {children}
+        </ButtonArrow>
+      );
   }
 };
 

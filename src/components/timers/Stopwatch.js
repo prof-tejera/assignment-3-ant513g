@@ -30,15 +30,14 @@ const Stopwatch = () => {
     }, state.isRunning ? 1000 : null);
   
   return (
-    <React.Fragment>
-      <Panel>
-        <DisplayTime>
-          <Section>
-            <LargeText>{formatTime(time)}</LargeText>
-            <Label>Current Lap: {laps.length + 1}</Label>
-          </Section>
-        </DisplayTime>
+    <Panel>
+      <DisplayTime>
         <Section>
+          <LargeText>{formatTime(time)}</LargeText>
+          <Label>Current Lap: {laps.length + 1}</Label>
+        </Section>
+      </DisplayTime>
+      <Section>
         <FlexBetween>
           <Button
             type={state.isRunning ? 'stop' : 'start'}
@@ -47,20 +46,19 @@ const Stopwatch = () => {
                   type: state.isRunning ? 'stop' : 'start'
                 })
               }}>
-            {state.isRunning ? 'Stop' : 'Start'  }
           </Button>
           <Button onClick={countReset}>Reset</Button>
-            <Button onClick={() => {
-                if (state.isRunning) {
-                  setLaps([...laps, time]);
-                } }}>Lap</Button>
+          <Button onClick={() => {
+              if (state.isRunning) {
+                setLaps([...laps, time]);
+              } }}>Lap</Button>
         </FlexBetween>
-        </Section>
-        <Section>
-          <DisplayRounds />
-        </Section>
+      </Section>
+      <Section>
+        <DisplayRounds />
+      </Section>
     </Panel>
-  </React.Fragment>);
+  );
 }
 
 export default Stopwatch;
