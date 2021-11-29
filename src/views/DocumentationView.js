@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-
 import DocumentComponent from "../components/documentation/DocumentComponent";
-
 import Loading from "../components/generic/Loading";
 import Button from "../components/generic/Button";
 import Input from "../components/generic/Input";
