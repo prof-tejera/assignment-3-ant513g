@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
-import ReactDOM from 'react-dom';
-import Panel from '../generic/Panel';
-import TimerProvider, { TimerContext } from '../../context/TimerProvider';
-import { Section, Label, FlexBetween, LargeText} from '../../utils/containers';
+import { TimerContext } from '../../context/TimerProvider';
+import { Panel, Section, Label, FlexBetween, LargeText} from '../../utils/containers';
 import { formatTime } from "../../utils/helpers";
 import DisplayTime from "../generic/DisplayTime";
 import Button from "../generic/Button";
@@ -64,13 +62,5 @@ const Stopwatch = () => {
     </Panel>
   </React.Fragment>);
 }
-
-ReactDOM.render(
-  <TimerProvider>
-    <Stopwatch />
-  </TimerProvider> ,
-
-  document.getElementById('root')
-);
 
 export default Stopwatch;

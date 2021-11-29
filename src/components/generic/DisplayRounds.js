@@ -1,8 +1,6 @@
-import React, { createContext } from 'react';
-import ReactDOM from 'react-dom';
-import { useContext } from 'react';
+import React, { createContext, useContext } from 'react';
 import styled from 'styled-components';
-import TimerProvider, { TimerContext } from '../../context/TimerProvider';
+import { TimerContext } from '../../context/TimerProvider';
 import { formatTime } from '../../utils/helpers';
 
 const Label = styled.span`
@@ -43,30 +41,21 @@ const DisplayRounds = () => {
   
   return (
     <>
-      <React.Fragment>
-        <ListUl> {laps.map((lapTime, index) => {
-          const lapNumber = index + 1;
-          return (
-            <>
-              <HR />
-              <Li key={index}>
-                  <Label>Lap {lapNumber}:</Label>
-                <span>{formatTime(parseFloat(lapTime - laps[index - 1] ? laps[index - 1] : 0))}
-                 </span>
-              </Li>
-            </>
-          );})}
-        </ListUl>
-      </React.Fragment>
+      <ListUl> {laps.map((lapTime, index) => {
+        const lapNumber = index + 1;
+        return (
+          <>
+            <HR />
+            <Li key={index}>
+                <Label>Lap {lapNumber}:</Label>
+              <span>{formatTime(parseFloat(lapTime - laps[index - 1] ? laps[index - 1] : 0))}
+                </span>
+            </Li>
+          </>
+        );})}
+      </ListUl>
     </>
   );
 };
-
-ReactDOM.render(
-  <TimerProvider>
-    <DisplayRounds />
-  </TimerProvider>,
-  document.getElementById('root')
-);
 
 export default DisplayRounds;

@@ -1,23 +1,27 @@
-import ReactDOM from 'react-dom';
+import React from 'react';
 import styled from 'styled-components';
-import TimerProvider from '../../context/TimerProvider';
 
 const ButtonBase = styled.button `
-  display: flex;
-  box-sizing: border-box;
-  overflow: auto;
+  display: inline-flex;
+  justify-content: center;
+  align-content: center;
   vertical-align: middle;
   text-align: center;
   margin: auto;
+  padding: 0.25rem 1rem; 
+  line-height: 40px;
   border-radius: 8px;
+  box-sizing: border-box;
   width: auto;
   min-width: 40px;
-  height: 40px;
+  height: auto;
+  overflow: auto;
   border: none;
   font-size: 16px;
   color: white;
   background-color: #4037C4;
   box-shadow: inset 2px 2px 5px #5850CE;
+  filter: drop-shadow(2px 2px 3px #333333);
   cursor: pointer;
   &:hover {
     background-color: #342D9F;
@@ -30,16 +34,6 @@ const ButtonBase = styled.button `
   }
 `;
 
-const Container = styled.div `
-    text-align: center;
-    display: flex;
-    padding: 0.5rem;
-    margin: auto;
-    align-content: center;
-    overflow: auto;
-    filter: drop-shadow(2px 2px 3px #333333);
-    cursor: pointer;
-`;
 
 const ButtonDefault = styled(ButtonBase)`
   background: #4037C4;
@@ -52,7 +46,7 @@ const ButtonSelected = styled(ButtonBase)`
   filter: drop-shadow(2px 2px 3px #333333);
 `;
 
-export const ButtonStart = styled(ButtonBase)`
+const ButtonStart = styled(ButtonBase)`
   background: #057C48;
   box-shadow: ${props => (props.down ? 'inset 0 0 5px black' : 'inset 2px 2px 5px #25A76F')};
   &:hover {
@@ -65,7 +59,7 @@ export const ButtonStart = styled(ButtonBase)`
   }
 `;
 
-export const ButtonStop = styled(ButtonBase)`
+const ButtonStop = styled(ButtonBase)`
   background: #AD0A0F;
   box-shadow: ${props => (props.down ? 'inset 0 0 5px black' : 'inset 2px 2px 5px #DD2C32')};
   &:hover {
@@ -78,6 +72,15 @@ export const ButtonStop = styled(ButtonBase)`
   }
 `;
 
+const ButtonArrow = styled(ButtonBase)`
+  padding: 0.25rem 0.5rem; 
+  line-height: 20px;
+  width: auto;
+  min-width: 20px;
+  height: auto;
+  font-size: 12px;
+`;
+
 const Button = (props) => {
   const { children, type, ...buttonProps } = props;
 
@@ -86,38 +89,37 @@ const Button = (props) => {
       return (
         <ButtonDefault
           {...buttonProps}>
-          <Container>
-            {children}
-          </Container> 
+          {children}
         </ButtonDefault>
       );
     case 'start':
       return (
         <ButtonStart
           {...buttonProps}>
-          <Container>
-            {children}
-          </Container>
+          {children}
         </ButtonStart>
       );
     case 'stop':
       return (
         <ButtonStop
          {...buttonProps}>
-            <Container>
-              {children}
-            </Container>
+           {children}
           </ButtonStop>
       );
       case 'active':
         return (
           <ButtonSelected
             {...buttonProps}>
-              <Container>
-                {children}
-              </Container>
+              {children}
             </ButtonSelected>
         );
+        case 'arrow':
+          return (
+            <ButtonArrow
+              {...buttonProps}>
+                {children}
+              </ButtonArrow>
+          );
   }
 };
 
@@ -126,18 +128,4 @@ Button.defaultProps = {
   pressed: false,
 };
 
-ReactDOM.render(
-  <TimerProvider>
-    <Button />
-  </TimerProvider>,
-  document.getElementById('root')
-);
-
 export default Button;
-
-
-
-
-
-
-

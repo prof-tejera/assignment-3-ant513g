@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import ReactDOM from 'react-dom';
-import Panel from '../generic/Panel';
-import TimerProvider, { TimerContext } from '../../context/TimerProvider';
-import { Container, FlexCenter,Label, LargeLabel, Section, Column, FlexBetween, Rounds, LargeText} from '../../utils/containers';
+import { TimerContext } from '../../context/TimerProvider';
+import { Panel, Container, FlexCenter,Label, LargeLabel, Section, Column, FlexBetween, Rounds, LargeText} from '../../utils/containers';
 import { format, formatTime } from "../../utils/helpers";
 import DisplayTime from "../generic/DisplayTime";
 import Button from "../generic/Button";
@@ -104,8 +102,8 @@ const XY = ({children}) => {
               <FlexCenter>
                   <LargeText>{state.rounds}</LargeText>
                   <Column>
-                      <Button onClick={incrementRounds}>&#9650;</Button>
-                      <Button onClick={decrementRounds}>&#9660;</Button>
+                      <Button type='arrow' onClick={incrementRounds}>&#9650;</Button>
+                      <Button type='arrow' onClick={decrementRounds}>&#9660;</Button>
                   </Column>
               </FlexCenter>
         </Section>
@@ -135,12 +133,5 @@ const XY = ({children}) => {
 </Panel>
 </React.Fragment>);
   }
-  
-ReactDOM.render(
-  <TimerProvider>
-    <XY />
-  </TimerProvider>,
-    document.getElementById('root')
-  );
   
   export default XY;

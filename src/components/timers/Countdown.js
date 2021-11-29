@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import ReactDOM from 'react-dom';
-import Panel from '../generic/Panel';
-import TimerProvider, { TimerContext } from '../../context/TimerProvider';
-import { Container, Section, FlexBetween, LargeText } from '../../utils/containers';
+import { TimerContext } from '../../context/TimerProvider';
+import { Panel, Container, Section, FlexBetween, LargeText } from '../../utils/containers';
 import { formatTime } from "../../utils/helpers";
 import DisplayTime from "../generic/DisplayTime";
 import Button from "../generic/Button";
@@ -82,14 +80,5 @@ const Countdown = () => {
     </Panel>
   );
 }
-
-ReactDOM.render(
-  <TimerProvider>
-    
-    <Countdown />
-    </TimerProvider>,
-   
-  document.getElementById('root')
-);
 
 export default Countdown;

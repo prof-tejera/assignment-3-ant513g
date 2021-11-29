@@ -6,8 +6,6 @@ import DocumentComponent from "../components/documentation/DocumentComponent";
 import Loading from "../components/generic/Loading";
 import Button from "../components/generic/Button";
 import Input from "../components/generic/Input";
-import DisplayTime from "../components/generic/DisplayTime";
-import DisplayRounds from "../components/generic/DisplayRounds";
 
 const Container = styled.div`
   display: flex;

@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import ReactDOM from 'react-dom';
-import Panel from '../generic/Panel';
-import TimerProvider, { TimerContext } from '../../context/TimerProvider';
-import { Container, Label, Section, LargeLabel, FlexBetween, Rounds, LargeText, Border, Column, FlexCenter} from '../../utils/containers';
+import { TimerContext } from '../../context/TimerProvider';
+import { Panel, Container, Label, Section, LargeLabel, FlexBetween, Rounds, LargeText, Border, Column, FlexCenter} from '../../utils/containers';
 import DisplayTime from "../generic/DisplayTime";
 import Button from "../generic/Button";
 import Input from "../generic/Input";
@@ -123,8 +121,8 @@ const Tabata = ({children}) => {
               <FlexCenter>
                   <LargeText>{state.rounds}</LargeText>
                   <Column>
-                      <Button onClick={incrementRounds}>&#9650;</Button>
-                      <Button onClick={decrementRounds}>&#9660;</Button>
+                      <Button type='arrow' onClick={incrementRounds}>&#9650;</Button>
+                      <Button type='arrow' onClick={decrementRounds}>&#9660;</Button>
                   </Column>
               </FlexCenter>
         </Section>
@@ -166,13 +164,6 @@ const Tabata = ({children}) => {
 
 </Panel>
 </React.Fragment>);
-  }
-  
-ReactDOM.render(
-  <TimerProvider>
-    <Tabata />
-  </TimerProvider>,
-    document.getElementById('root')
-  );
+}
   
   export default Tabata;

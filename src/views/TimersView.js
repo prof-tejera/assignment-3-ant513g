@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import ReactDOM from "react-dom";
 import styled from "styled-components";
 import TimerProvider, { TimerContext } from "../context/TimerProvider";
 import Stopwatch from "../components/timers/Stopwatch";

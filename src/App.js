@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import styled from "styled-components";
+import TimerProvider from "./context/TimerProvider";
 import DocumentationView from "./views/DocumentationView";
 import TimersView from "./views/TimersView";
 
@@ -21,31 +22,30 @@ const StyledLi = styled.li`
 
 function App() {
   return (
-    
-    <Container>
-      <Router>
-        <nav>
-          <ul>
-            <StyledLi >
-              <Link to="/">Timers</Link>
-            </StyledLi >
-            <StyledLi >
-             <Link to="/docs">Documentation</Link>
-            </StyledLi >
-          </ul>
-        </nav>
-        <Switch>
-          <Route path="/docs">
-          <DocumentationView />
-          </Route>
-          <Route path="/">
-          <TimersView/>
-          </Route>
-        </Switch>
-      </Router>
-      </Container>
-      
-    
+    <TimerProvider>
+      <Container>
+        <Router>
+          <nav>
+            <ul>
+              <StyledLi >
+                <Link to="/">Timers</Link>
+              </StyledLi >
+              <StyledLi >
+              <Link to="/docs">Documentation</Link>
+              </StyledLi >
+            </ul>
+          </nav>
+          <Switch>
+            <Route path="/docs">
+            <DocumentationView />
+            </Route>
+            <Route path="/">
+            <TimersView/>
+            </Route>
+          </Switch>
+        </Router>
+        </Container>
+      </TimerProvider>    
   );
 }
 
