@@ -35,11 +35,6 @@ const ButtonBase = styled.button `
   }
 `;
 
-
-const ButtonDefault = styled(ButtonBase)`
-  background: #4037C4;
-`;
-
 const ButtonSelected = styled(ButtonBase)`
   background-color: #342D9F;
   box-shadow: inset 1px 1px 5px #4037C4;
@@ -85,57 +80,101 @@ const ButtonArrow = styled(ButtonBase)`
 const Button = (props) => {
   const { children, type, ...buttonProps } = props;
 
-
   const {
+    time,
+    state,
+    setState,
+    laps,
+    setLaps,
+    countReset,
+    fastForward,
     decrementRounds,
     incrementRounds,
   } = useContext(TimerContext);
 
-
-
-
   switch (type) {
     default:
       return (
-        <ButtonDefault
+        <ButtonBase
           {...buttonProps}>
           {children}
-        </ButtonDefault>
+        </ButtonBase>
       );
     case 'start':
       return (
         <ButtonStart
-          {...buttonProps}>
+          {...buttonProps}
+          onClick={() => {
+            setState({
+              type: state.isRunning ? 'stop' : 'start'
+            })
+          }}>
           Start
         </ButtonStart>
       );
     case 'stop':
       return (
         <ButtonStop
-         {...buttonProps}>
+          {...buttonProps}
+          onClick={() => {
+            setState({
+              type: state.isRunning ? 'stop' : 'start'
+            })
+          }}>
           Stop
         </ButtonStop>
+      );
+    case 'lap':
+      return (
+        <ButtonBase
+          {...buttonProps}
+          onClick={() => {
+            if (state.isRunning) {
+              setLaps([...laps, time]);
+            }
+          }}>
+          Lap
+          </ButtonBase>
+      );
+    case 'reset':
+      return (
+        <ButtonBase
+          {...buttonProps}
+          onClick={countReset}
+        >
+          Reset
+        </ButtonBase>
+      );
+    case 'skip':
+      return (
+        <ButtonBase
+          {...buttonProps}
+          onClick={fastForward}
+        >
+          Skip
+        </ButtonBase>
       );
     case 'active':
       return (
         <ButtonSelected
           {...buttonProps}>
             {children}
-          </ButtonSelected>
+        </ButtonSelected>
       );
     case 'arrowUp':
       return (
         <ButtonArrow
-          {...buttonProps}>
-          {children}
+          {...buttonProps}
+          onClick={incrementRounds}>
           &#9650;
         </ButtonArrow>
       );
     case 'arrowDown':
       return (
         <ButtonArrow
-          {...buttonProps}>
-            {children}
+          {...buttonProps}
+          onClick={decrementRounds}>
+          &#9660;
         </ButtonArrow>
       );
   }

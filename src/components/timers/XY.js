@@ -18,16 +18,11 @@ const XY = ({children}) => {
     time,
     setTime,
     ss,
-    setSS,
     mm,
-    setMM,
     hh,
-    setHH,
     totalTime,
     setTotalTime,
     rounds,
-    decrementRounds,
-    incrementRounds,
     setState,
     state,
     countDown,
@@ -39,7 +34,6 @@ const XY = ({children}) => {
     currentRound,
     setCurrentRound,
     countReset,
-    fastForward,
     totalXY,
   } = useContext(TimerContext);
 
@@ -83,54 +77,48 @@ const XY = ({children}) => {
   return (
     <React.Fragment>
       <Panel>
-          <DisplayTime>
-            <Section>
-                  <Label>Total Time Left:</Label>
-                  <Rounds>{formatTime(totalTime)}</Rounds>
-              </Section>
-              <Section>
-              <Label> Time Left in Round:</Label>
-                  <LargeText> {formatTime(time)}</LargeText>
-              </Section>
-              <Section>
-                  <Label>Rounds:</Label>
-            <Rounds>{currentRound}/{state.rounds}</Rounds>
-              </Section>
-          </DisplayTime>
+        <DisplayTime>
           <Section>
-              <LargeLabel>Select Rounds:</LargeLabel>
-              <FlexCenter>
-                  <LargeText>{state.rounds}</LargeText>
-                  <Column>
-                      <Button type='arrow' onClick={incrementRounds}>&#9650;</Button>
-                      <Button type='arrow' onClick={decrementRounds}>&#9660;</Button>
-                  </Column>
-              </FlexCenter>
+            <Label>Total Time Left:</Label>
+            <Rounds>{formatTime(totalTime)}</Rounds>
+          </Section>
+          <Section>
+            <Label> Time Left in Round:</Label>
+            <LargeText> {formatTime(time)}</LargeText>
+          </Section>
+          <Section>
+            <Label>Rounds:</Label>
+            <Rounds>{currentRound}/{state.rounds}</Rounds>
+          </Section>
+        </DisplayTime>
+        <Section>
+          <LargeLabel>Select Rounds:</LargeLabel>
+          <FlexCenter>
+            <LargeText>{state.rounds}</LargeText>
+            <Column>
+              <Button type='arrowUp' />
+              <Button type='arrowDown' />
+            </Column>
+          </FlexCenter>
         </Section>
         <Section>
           <LargeLabel>Set Round Time: {format(hh, mm, ss)}</LargeLabel>
           <Container>
-            <Input value={hh} name="Hours" onChange={(e) => setHH(e.target.value)}/>
-            <Input value={mm} name="Minutes" onChange={(e) => setMM(e.target.value)}/>
-            <Input value={ss} name="Seconds" onChange={(e) => setSS(e.target.value)}/>
+            <Input value='hh' />
+            <Input value='mm' />
+            <Input value='ss' />
           </Container>
         </Section>
-          
-    <Section>    
-    <FlexBetween>
-        <Button type={state.isRunning ? 'stop' : 'start'}
-        onClick={() => { setState({ type: state.isRunning ? 'stop' : 'start'}) }}></Button>
-        <Button onClick={countReset}>Reset</Button>
-        <Button onClick={fastForward} >Skip</Button>
-  </FlexBetween>
-    </Section>
-    
-
-
-
-
-</Panel>
-</React.Fragment>);
-  }
+        <Section>    
+          <FlexBetween>
+            <Button type={state.isRunning ? 'stop' : 'start'} />
+            <Button type='reset' />
+            <Button type='skip' />
+          </FlexBetween>
+        </Section>
+      </Panel>
+    </React.Fragment>
+  );
+}
   
   export default XY;

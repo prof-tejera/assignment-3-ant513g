@@ -2,10 +2,11 @@ import styled from "styled-components";
 
 
 export const Panel = styled.div`
+  box-sizing: border-box;
   background: rgb(37,37,60);
   background: linear-gradient(90deg, rgba(37,37,60,1) 0%, rgba(47,47,55,1) 100%);
   border-radius: 16px;
-  padding: 2rem 2rem 0.5rem 2rem;
+  padding: 2rem;
   display: block;
   justify-content: space-evenly;
   overflow: auto;
@@ -57,7 +58,7 @@ export const Column = styled.span`
 `;
 
 export const Section = styled.section`
-  margin: 2.5rem 1rem;
+  margin: 2.5rem;
 `;
 
 export const LargeText = styled.div`

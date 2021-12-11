@@ -4,11 +4,23 @@ import singleBeep from '../audio/singleBeep.mp3';
 import done from '../audio/done.mp3';
 import convertToMs from '../utils/helpers';
 import { totalTimeXY, totalTimeTabata } from '../utils/helpers';
+import Stopwatch from "../components/timers/Stopwatch";
+import Countdown from "../components/timers/Countdown";
+import XY from "../components/timers/XY";
+import Tabata from "../components/timers/Tabata";
+
 
 export const TimerContext = createContext({});
 
-const TimerProvider = ({ children }) => {
+const routes = {
+    HOME: '/',
+    ADD: '/add',
+    DOCS: '/docs',
+};
 
+const TimerProvider = ({ children }) => {
+   
+    
     const [play] = useSound(singleBeep);
     const [doneStop] = useSound(done);
 
@@ -77,7 +89,8 @@ const TimerProvider = ({ children }) => {
     const [restTime, setRestTime] = useState(0);
     const [currentRound, setCurrentRound] = useState(1);
     const [resting, setResting] = useState(false);
-   
+    const timers = [];
+
     const {
         isRunning,
         rounds,
@@ -158,14 +171,31 @@ const TimerProvider = ({ children }) => {
         }
        
     }
-    
-   
 
-   
-    
+
+    function Timers(type) {
+        switch (type) {
+            default:
+                return (
+                    timers.push(<Stopwatch></Stopwatch>)
+              );
+            case 'countdown':
+                return (timers.push(<Countdown></Countdown>)
+              );
+            case 'xy':
+                return (timers.push(<XY></XY>)
+              );
+            case 'tabata':
+                return (timers.push(<Tabata> </Tabata>)
+            );
+        }
+    }
+
     return (
         <TimerContext.Provider
             value={{
+                Timers,
+                timers,
                 active,
                 setActive,
                 count,

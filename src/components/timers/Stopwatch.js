@@ -14,16 +14,11 @@ import useInterval from "../../hooks/hooks";
 const Stopwatch = () => {
   const {
     state,
-    setState,
     laps,
-    setLaps,
     time,
     setTime,
     countUp,
-    countReset
     } = useContext(TimerContext);
-  
-    
   
   useInterval(() => {
     setTime(countUp);
@@ -37,26 +32,7 @@ const Stopwatch = () => {
           <Label>Current Lap: {laps.length + 1}</Label>
         </Section>
       </DisplayTime>
-      <Section>
-        <FlexBetween>
-          <Button
-            type={state.isRunning ? 'stop' : 'start'}
-            onClick={() => {
-                setState({
-                  type: state.isRunning ? 'stop' : 'start'
-                })
-              }}>
-          </Button>
-          <Button onClick={countReset}>Reset</Button>
-          <Button onClick={() => {
-              if (state.isRunning) {
-                setLaps([...laps, time]);
-              } }}>Lap</Button>
-        </FlexBetween>
-      </Section>
-      <Section>
-        <DisplayRounds />
-      </Section>
+      <DisplayRounds />
     </Panel>
   );
 }

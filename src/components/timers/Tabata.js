@@ -21,22 +21,15 @@ const Tabata = ({children}) => {
     time,
     setTime,
     ss,
-    setSS,
     mm,
-    setMM,
     hh,
-    setHH,
     resting,
     setResting,
     restMM,
-    setRestMM,
     restSS,
-    setRestSS,
     totalTime,
     setTotalTime,
     rounds,
-    decrementRounds,
-    incrementRounds,
     setState,
     state,
     countDown,
@@ -50,7 +43,6 @@ const Tabata = ({children}) => {
     currentRound,
     setCurrentRound,
     countReset,
-    fastForward,
     totalTabata,
     roundDone,
   } = useContext(TimerContext);
@@ -88,7 +80,7 @@ const Tabata = ({children}) => {
 
   useEffect(() => {
     if (!state.isRunning) {
-      setTime(() => getMs);
+      setTime(getMs);
       setRoundTime(getMs);
       setRestTime(getRestMs);
       setTotalTime(totalTabata);
@@ -120,36 +112,33 @@ const Tabata = ({children}) => {
         <FlexCenter>
           <LargeText>{state.rounds}</LargeText>
           <Column>
-              <Button type='arrow' onClick={incrementRounds}>&#9650;</Button>
-              <Button type='arrow' onClick={decrementRounds}>&#9660;</Button>
+            <Button type='arrowUp' />
+            <Button type='arrowDown' />
           </Column>
         </FlexCenter>
       </Section>
       <Section>
         <LargeLabel>Set Round Time: {format(hh, mm, ss)}</LargeLabel>
         <Container>
-            <Input value={hh} name="Hours" onChange={(e) => setHH(e.target.value)}/>
-            <Input value={mm} name="Minutes" onChange={(e) => setMM(e.target.value)}/>
-            <Input value={ss} name="Seconds" onChange={(e) => setSS(e.target.value)}/>
+          <Input value='hh' />
+          <Input value='mm' />
+          <Input value='ss' />
         </Container>
       </Section>
       <Section>
         <Border>
           <LargeLabel>Set Rest Time: {format(0, restMM, restSS)}</LargeLabel>
           <Container>
-            <Input name="Minutes" value={restMM} onChange={(e) => { setRestMM(e.target.value); }} />
-            <Input name="Seconds" value={restSS} onChange={(e) => { setRestSS(e.target.value);  }}/>
+            <Input value='restMM' />
+            <Input value='restSS' />
           </Container>
         </Border>
       </Section>
       <Section>
         <FlexBetween>
-          <Button
-            type={state.isRunning ? 'stop' : 'start'}
-            onClick={() => { setState({ type: state.isRunning ? 'stop' : 'start'}) }}>
-          </Button>
-          <Button onClick={countReset}>Reset</Button>
-          <Button onClick={fastForward} >Skip</Button>
+          <Button type={state.isRunning ? 'stop' : 'start'} />
+          <Button type='reset' />
+          <Button type='skip' />
         </FlexBetween>
       </Section>
     </Panel>

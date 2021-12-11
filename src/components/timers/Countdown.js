@@ -17,17 +17,9 @@ const Countdown = () => {
     time,
     setTime,
     state,
-    setState,
-    ss,
-    setSS,
-    mm,
-    setMM,
-    hh,
-    setHH,
     countDown,
     getMs,
     timerDone,
-    countReset,
   } = useContext(TimerContext);
  
 
@@ -44,7 +36,7 @@ const Countdown = () => {
 
   useEffect(() => {
     if (!state.isRunning) {
-      setTime(() => getMs);
+      setTime(getMs);
     } 
   }, );
   
@@ -58,21 +50,14 @@ const Countdown = () => {
         </Section>
       </DisplayTime>
       <Container>
-        <Input value={hh} name="Hours" onChange={(e) => setHH(e.target.value)}/>
-        <Input value={mm} name="Minutes" onChange={(e) => setMM(e.target.value)}/>
-        <Input value={ss} name="Seconds" onChange={(e) => setSS(e.target.value)}/>
+        <Input value='hh' />
+        <Input value='mm' />
+        <Input value='ss' />
       </Container>
       <Section>
         <FlexBetween>
-          <Button
-            type={state.isRunning ? 'stop' : 'start'}
-            onClick={() => {
-              setState({ type: state.isRunning ? 'stop' : 'start' })
-            }}>
-          </Button>
-          <Button onClick={countReset}>
-            Reset
-          </Button>
+          <Button type={state.isRunning ? 'stop' : 'start'} />
+          <Button type='reset' />
         </FlexBetween>
       </Section>
     </Panel>

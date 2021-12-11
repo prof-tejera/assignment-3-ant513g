@@ -14,6 +14,7 @@ const Li = styled.li`
   color: white;
   display: flex;
   justify-content: space-between;
+  margin: 1rem auto;
 `;
 
 const HR = styled.hr`
@@ -26,7 +27,7 @@ const HR = styled.hr`
 const ListUl = styled.ul`
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 1rem 0 0 0;
 `;
 
 export const DisplayContext = createContext();
@@ -36,8 +37,6 @@ const DisplayRounds = () => {
   const {
     laps,
   } = useContext(TimerContext);
-
-  
   
   return (
     <>
@@ -45,12 +44,12 @@ const DisplayRounds = () => {
         const lapNumber = index + 1;
         return (
           <>
-            <HR />
             <Li key={index}>
                 <Label>Lap {lapNumber}:</Label>
               <span>{formatTime(parseFloat(lapTime - laps[index - 1] ? laps[index - 1] : 0))}
                 </span>
             </Li>
+            <HR />
           </>
         );})}
       </ListUl>
