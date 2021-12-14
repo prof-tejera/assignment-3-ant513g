@@ -20,6 +20,7 @@ const Countdown = () => {
     countDown,
     getMs,
     timerDone,
+    timers,
   } = useContext(TimerContext);
  
 
@@ -55,10 +56,10 @@ const Countdown = () => {
         <Input value='ss' />
       </Container>
       <Section>
-        <FlexBetween>
+        {/* <FlexBetween>
           <Button type={state.isRunning ? 'stop' : 'start'} />
           <Button type='reset' />
-        </FlexBetween>
+        </FlexBetween> */}
       </Section>
     </Panel>
   );

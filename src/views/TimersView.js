@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { TimerContext } from "../context/TimerProvider";
 import Navigation from "../components/generic/Navigation";
 import Stopwatch from "../components/timers/Stopwatch";
-import { FlexCenter } from "../utils/containers";
+import { FlexCenter, Section, Container } from "../utils/containers";
 
 import {
   // BrowserRouter as
@@ -28,31 +28,44 @@ const NavWrapper = styled.div`
   bottom: 0;
   width: 100%;
 `;
+const Div = styled.div`
+margin-bottom: 100px;
+`;
 
 const Timer = () => {
   const {
-    timers,
+    queue,
+    timers
   } = useContext(TimerContext);
-
+ 
   return (
     <React.Fragment>
-      <div>
-        <FlexCenter>
-          <Link to="/add">
-            <Button onClick={() => console.log(timers)}>Add</Button>
-          </Link>
-        </FlexCenter>
-        <Stopwatch />
-        {timers.map(timer => (
-          <TimerWrapper key={timer.id}>
-            {timer}
-          </TimerWrapper>
-        ))}
-      </div>
-      <NavWrapper>
-        <Navigation />
-      </NavWrapper>
-      </React.Fragment>
+      <Div>
+        <Section>
+          <Container>
+            <h1>Create a New Workout!</h1>
+          </Container>
+          <br />
+          <Container>
+            <Link to="/add">
+              <Button type='begin' />
+            </Link>
+          </Container>
+        </Section>
+          {queue.map((timer, index)=> (
+            <TimerWrapper key={timer.id}>
+              <h2>{timer.id}{timer.title}</h2>
+                {timer.timer}
+              <Button onClick={() => {
+                queue.splice(index, 1);
+              }}>Remove</Button>
+            </TimerWrapper>
+          ))}
+        <NavWrapper>
+          <Navigation />
+        </NavWrapper>
+      </Div>
+    </React.Fragment>
   );
 };
 

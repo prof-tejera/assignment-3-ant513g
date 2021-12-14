@@ -6,14 +6,7 @@ import DocumentationView from "./views/DocumentationView";
 import Timer from "./views/TimersView";
 import AddView from "./views/AddView";
 import { FlexBetween } from "./utils/containers";
-
-const Container = styled.div`
-  background-image: linear-gradient(to right, #5850CE, #4037C4, #342D9F);
-  height: 100vh;
-  overflow: auto;
-  color: white;
-  font-family: 'Inconsolata', monospace;
-`;
+import GlobalStyles from './components/generic/Styles';
 
 const StyledLi = styled.li`
   display: inline-flex;
@@ -23,7 +16,6 @@ const StyledLi = styled.li`
 const StyledLink = styled(Link)`
   padding: 8px;
   color: white;
- 
   font-family: 'Inconsolata', monospace;
   font-size: 20px;
   text-decoration: none;
@@ -55,7 +47,8 @@ const Nav = styled.nav`
 function App() {
   return (
     <TimerProvider>
-      <Container>
+      <GlobalStyles />
+      {/* <Container> */}
         <Router>
           <Nav>
             <FlexBetween>
@@ -78,7 +71,7 @@ function App() {
             <Route path="/add" element={<AddView />} />
           </Routes>
         </Router>
-        </Container>
+        {/* </Container> */}
       </TimerProvider>    
   );
 }

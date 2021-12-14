@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { TimerContext } from '../../context/TimerProvider';
 
@@ -64,6 +64,7 @@ export const Input = (props) => {
     setRestSS,
     restMM,
     setRestMM,
+    setState,
   } = useContext(TimerContext);
  
   function options() {
@@ -80,6 +81,11 @@ export const Input = (props) => {
     return arrOptions; 
   }
 
+  // const selectRef = useRef();
+  //   useEffect(() => {
+  //     selectRef.current.focus();
+  //   }, []);
+
   switch (value) {
     default:
       return (
@@ -90,6 +96,7 @@ export const Input = (props) => {
             {name}
           </Label>
           <Select
+            // ref={selectRef} 
             name={name}
             size="5"
             onChange={onChange}
@@ -108,9 +115,14 @@ export const Input = (props) => {
             Hours
           </Label>
           <Select
+            // ref={selectRef} 
             name='Hours'
             size='5'
-            onChange={(e) => setHH(e.target.value)}
+            onChange={(e) => {
+              setHH(current => current + e.target.value);
+              setState((prevState) => ({ ...prevState, [name]: value }));
+            
+            }}
             value={hh}
             id='options'>
             {options()}
@@ -126,6 +138,7 @@ export const Input = (props) => {
             Minutes
           </Label>
           <Select
+            // ref={selectRef} 
             name='Minutes'
             size="5"
             onChange={(e) => setMM(e.target.value)}
@@ -144,6 +157,7 @@ export const Input = (props) => {
             Seconds
           </Label>
           <Select
+            // ref={selectRef} 
             name='Seconds'
             size="5"
             onChange={(e) => setSS(e.target.value)}
@@ -162,6 +176,7 @@ export const Input = (props) => {
             Minutes
           </Label>
           <Select
+            // ref={selectRef} 
             name='RestMinutes'
             size="5"
             onChange={(e) => setRestMM(e.target.value)}
@@ -180,6 +195,7 @@ export const Input = (props) => {
             Seconds
           </Label>
           <Select
+            // ref={selectRef} 
             name='RestSeconds'
             size="5"
             onChange={(e) => setRestSS(e.target.value)}

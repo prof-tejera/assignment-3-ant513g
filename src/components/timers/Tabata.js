@@ -135,11 +135,11 @@ const Tabata = ({children}) => {
         </Border>
       </Section>
       <Section>
-        <FlexBetween>
+        {/* <FlexBetween>
           <Button type={state.isRunning ? 'stop' : 'start'} />
           <Button type='reset' />
           <Button type='skip' />
-        </FlexBetween>
+        </FlexBetween> */}
       </Section>
     </Panel>
   );

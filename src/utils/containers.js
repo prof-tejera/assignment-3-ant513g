@@ -11,8 +11,8 @@ export const Panel = styled.div`
   justify-content: space-evenly;
   overflow: auto;
   box-sizing: border-box;
-  min-width: 300px;
-  max-width: 500px;
+  min-width: 500px;
+  max-width: 700px;
   box-shadow:  1px 1px 5px #2F2F37;
   margin: auto;
 `;

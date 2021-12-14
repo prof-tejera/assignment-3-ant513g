@@ -1,4 +1,4 @@
-import React, { useReducer, useState, createContext } from 'react';
+import React, { useReducer, useState, createContext, useEffect } from 'react';
 import useSound from 'use-sound';
 import singleBeep from '../audio/singleBeep.mp3';
 import done from '../audio/done.mp3';
@@ -29,6 +29,7 @@ const TimerProvider = ({ children }) => {
         time: 0,
         rounds: 1,
     };
+    
 
     function StateReducer(state, action) {
         switch (action.type) {
@@ -52,6 +53,7 @@ const TimerProvider = ({ children }) => {
                     return { ...state, isRunning: true, rounds: state.rounds - 1 };
                 }
             }
+            
             case 'countUp':
                 return { ...state, time: state.time + 1, currentRound: state.currentRound };
             case 'countDown':
@@ -67,44 +69,71 @@ const TimerProvider = ({ children }) => {
             default:
                 throw new Error();
         }
-    };
+    }
+        
+   
+
+    // function timerState() {
+    //     if (timer.selected) {
+    //         set
+    //     }
+    // }
+
+   
+    // useEffect(() => {
+        
+    //   }, );
 
 
+    // if (timer.selected == isRunning ) {
+    //     if(timer.selected == done) {
+    //          }   remove from queue,
+    // }
+    // when queue == 0 and timer.done
+    // {
+    //     workout == done.
+    // }
 
-    const [active, setActive] = useState({ Stopwatch: true, Countdown: false, XY: false, Tabata: false });
+    const [state, setState] = useReducer(StateReducer, initialState);
+    
+    const {
+        isRunning,
+        isFinished,
+        inQueue,
+        rounds,
+    } = state;
+
+    const [selected, setSelected] = useState({ Stopwatch: true, Countdown: false, XY: false, Tabata: false });
+    
+    const [totalTime, setTotalTime] = React.useState(0);
     const [time, setTime] = useState(0);
+
     const [hh, setHH] = React.useState(0);
     const [mm, setMM] = React.useState(0);
     const [ss, setSS] = React.useState(0);
-    const [state, setState] = useReducer(StateReducer, initialState);
-    const [count, setCount] = useState(0);
-    const [laps, setLaps] = useState([]);
-    const [currentLap, setCurrentLap] = useState(0);
-    const [sets, setSets] = useState(0);
-    const [restSS, setRestSS] = useState(0);
     const [restMM, setRestMM] = useState(0);
-    const [value, setValue] = useState(0);
-    const [totalTime, setTotalTime] = React.useState(0);
+    const [restSS, setRestSS] = useState(0);
+  
     const [roundTime, setRoundTime] = useState(0);
     const [restTime, setRestTime] = useState(0);
     const [currentRound, setCurrentRound] = useState(1);
     const [resting, setResting] = useState(false);
-    const timers = [];
 
-    const {
-        isRunning,
-        rounds,
-    } = state;
-    
+    const [myQueue, setQueue] = useState([]);
+
+    const [count, setCount] = useState(0);
+    const [laps, setLaps] = useState([]);
+    const [currentLap, setCurrentLap] = useState(0);
+    const [sets, setSets] = useState(0);
+   
+    const [value, setValue] = useState(0);
   
     let getMs = Number(convertToMs(hh, mm, ss));
     let getRestMs = Number(convertToMs(0, mm, ss));
 
- 
     const totalXY = parseInt(totalTimeXY(hh, mm, ss, state.rounds));
     const totalTabata = parseInt(totalTimeTabata(hh, mm, ss, restMM, restSS, state.rounds));
 
-  
     function incrementRounds() {
         setState({ type: 'incrementRounds' });
     }
@@ -112,14 +141,15 @@ const TimerProvider = ({ children }) => {
         setState({ type: 'decrementRounds' });
     }
 
-
     function countUp() {
         setTime(time + 1);
+        // setState({ type: 'countUp' });
         return time;
     }
 
     function countDown() {
         setTime(time - 1);
+        // setState({ type: 'countDown' });
         return Number(time);
     }
     
@@ -132,7 +162,7 @@ const TimerProvider = ({ children }) => {
         play();
     }
 
-   
+  
     function countReset() {
         setState({ type: 'reset' });
         setTime(0);
@@ -147,7 +177,7 @@ const TimerProvider = ({ children }) => {
    }
     
     function fastForward() {
-        if (active.XY) {
+        if (selected.XY) {
             if (totalTime < 1) {
                 countReset();
                 timerDone();
@@ -168,36 +198,42 @@ const TimerProvider = ({ children }) => {
                 setTime(roundTime - 1);
                 setResting(false);
             }
-        }
-       
+        } 
     }
 
+    const queue = [];
 
-    function Timers(type) {
-        switch (type) {
-            default:
-                return (
-                    timers.push(<Stopwatch></Stopwatch>)
-              );
-            case 'countdown':
-                return (timers.push(<Countdown></Countdown>)
-              );
-            case 'xy':
-                return (timers.push(<XY></XY>)
-              );
-            case 'tabata':
-                return (timers.push(<Tabata> </Tabata>)
-            );
+    const timers =
+    {
+        stopwatch: {
+            title: 'Stopwatch',
+            timer: <Stopwatch></Stopwatch>
+
+        },
+        countdown: {
+            title: 'Countdown',
+            timer: <Countdown></Countdown>
+        },
+        xy: {
+            title: 'XY',
+            timer: <XY></XY>
+        },
+        tabata: {
+            title: 'Tabata',
+            timer: <Tabata></Tabata>
         }
-    }
+    };
+
 
     return (
         <TimerContext.Provider
             value={{
-                Timers,
+                myQueue,
+                setQueue,
                 timers,
-                active,
-                setActive,
+                queue,
+                selected,
+                setSelected,
                 count,
                 setCount,
                 initialState,

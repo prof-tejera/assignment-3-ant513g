@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { TimerContext } from '../../context/TimerProvider';
+import Styles from './Styles';
+import Colors from '../../theme/Colors';
 
 const ButtonBase = styled.button `
   display: inline-flex;
@@ -9,62 +11,74 @@ const ButtonBase = styled.button `
   vertical-align: middle;
   text-align: center;
   margin: auto;
-  padding: 0.25rem 1rem; 
+  padding: 0.25rem 1rem;
+  width: auto;
+  height: auto;
+  min-width: 40px;
   line-height: 40px;
   border-radius: 8px;
-  box-sizing: border-box;
-  width: auto;
-  min-width: 40px;
-  height: auto;
+  
   overflow: auto;
   border: none;
   font-size: 16px;
-  color: white;
-  background-color: #4037C4;
-  box-shadow: inset 2px 2px 5px #5850CE;
-  filter: drop-shadow(2px 2px 3px #333333);
+  color: ${Colors.white};
+  background-color: ${Colors.oceanblue500};
+  box-shadow: inset 2px 2px 5px ${Colors.oceanblue400};
+  filter: ${Colors.shadow};
   cursor: pointer;
   &:hover {
-    background-color: #342D9F;
-    box-shadow: inset 1px 1px 5px #4037C4;
+    background-color: ${Colors.oceanblue600};
+    box-shadow: inset 2px 2px 5px ${Colors.oceanblue500};
   }
   &:active {
-    background-color: #342D9F;
+    background-color: ${Colors.oceanblue600};
     font-weight: 600;
-    box-shadow: inset 1px 1px 5px #25253C;
+    box-shadow: ${Colors.pressed};
   }
 `;
+
+
 
 const ButtonSelected = styled(ButtonBase)`
-  background-color: #342D9F;
-  box-shadow: inset 1px 1px 5px #4037C4;
+  background-color: ${Colors.oceanblue400};
+  box-shadow: inset 1px 1px 5px ${Colors.oceanblue500};
   font-weight: 600;
-  filter: drop-shadow(2px 2px 3px #333333);
 `;
 
-const ButtonStart = styled(ButtonBase)`
-  background: #057C48;
-  box-shadow: ${props => (props.down ? 'inset 0 0 5px black' : 'inset 2px 2px 5px #25A76F')};
+const ButtonInactive = styled(ButtonBase)`
+  background-color: ${Colors.oceanblue600};
+  box-shadow: inset 1px 1px 5px ${Colors.oceanblue700};
+  font-weight: 600;
   &:hover {
-    background-color: #046239;
-    box-shadow: ${props => (props.down ? 'inset 0 0 5px black' : 'inset 2px 2px 5px #057C48')};
+    background-color: ${Colors.oceanblue700};
+    box-shadow: inset 2px 2px 5px ${Colors.oceanblue600};
   }
-  &:active {
-    background-color: #046239;
-    box-shadow: inset 1px 1px 5px #25253C;
-  }
+`;
+
+
+const ButtonStart = styled(ButtonBase)`
+  background: ${Colors.springgreen500};
+  box-shadow: inset 2px 2px 5px ${Colors.springgreen400};
+    &:hover {
+      background-color: ${Colors.springgreen600};
+      box-shadow: inset 3px 3px 5px ${Colors.springgreen500};
+    }
+    &:active {
+      background-color: ${Colors.springgreen600};
+      box-shadow: ${Colors.pressed};
+    }
 `;
 
 const ButtonStop = styled(ButtonBase)`
-  background: #AD0A0F;
-  box-shadow: ${props => (props.down ? 'inset 0 0 5px black' : 'inset 2px 2px 5px #DD2C32')};
+  background: ${Colors.carnelian500};
+  box-shadow: inset 2px 2px 5px ${Colors.carnelian400};
   &:hover {
-    background-color: #87080C;
-    box-shadow: ${props => (props.down ? 'inset 0 0 5px black' : 'inset 2px 2px 5px #AD0A0F')};
+    background-color: ${Colors.carnelian600};
+    box-shadow: inset 2px 2px 5px ${Colors.carnelian500};
   }
   &:active {
-    background-color: #87080C;
-    box-shadow: inset 1px 1px 5px #25253C;
+    background-color: ${Colors.carnelian600};
+    box-shadow: ${Colors.pressed};
   }
 `;
 
@@ -76,6 +90,29 @@ const ButtonArrow = styled(ButtonBase)`
   height: auto;
   font-size: 12px;
 `;
+
+const ButtonAdd = styled(ButtonBase)`
+  background-color: ${Colors.oceanblue700};
+`;
+const ButtonBegin = styled(ButtonBase)`
+  background-color: ${Colors.oceanblue700};
+  border-radius: 50%;
+  font-weight: 600;
+  width: 120px;
+  height: 120px;
+  padding: 2.25rem;
+ 
+  border: solid 2px #6760D2;
+  box-shadow: 0 0 0 8px #2F288F;
+
+  &:hover {
+    background-color: ${Colors.oceanblue600};
+    box-shadow: 0 0 0 8px #2F288F;
+    box-shadow: inset 2px 2px 5px ${Colors.oceanblue500};
+    transition:.5s ease;
+  }
+`;
+
 
 const Button = (props) => {
   const { children, type, ...buttonProps } = props;
@@ -90,6 +127,8 @@ const Button = (props) => {
     fastForward,
     decrementRounds,
     incrementRounds,
+    selected,
+    queue,
   } = useContext(TimerContext);
 
   switch (type) {
@@ -154,13 +193,37 @@ const Button = (props) => {
           Skip
         </ButtonBase>
       );
-    case 'active':
+    case 'selected':
       return (
         <ButtonSelected
           {...buttonProps}>
             {children}
         </ButtonSelected>
       );
+      case 'inactive':
+        return (
+          <ButtonInactive
+            {...buttonProps}>
+              {children}
+          </ButtonInactive>
+        );
+      
+    case 'add':
+      return (
+        <ButtonAdd
+          {...buttonProps}
+        >
+          Add to Queue
+        </ButtonAdd>
+      );
+    case 'begin':
+    return (
+      <ButtonBegin
+        {...buttonProps}
+      >
+       Begin
+      </ButtonBegin>
+    );
     case 'arrowUp':
       return (
         <ButtonArrow
@@ -177,6 +240,7 @@ const Button = (props) => {
           &#9660;
         </ButtonArrow>
       );
+    
   }
 };
 

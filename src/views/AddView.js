@@ -7,9 +7,11 @@ import XY from "../components/timers/XY";
 import Tabata from "../components/timers/Tabata";
 // import { useHistory } from "react-router";
 import Button from "../components/generic/Button";
-import { Container } from "../utils/containers";
-
-
+import { Section, Label, FlexBetween } from "../utils/containers";
+import { formatTime } from "../utils/helpers";
+import { Rounds } from "../utils/containers";
+  
+  
 const Timer = styled.div`
   padding: 20px;
   margin: 10px;
@@ -20,6 +22,7 @@ const Timer = styled.div`
 const Nav = styled.nav`
   height: auto;
   width: 100%;
+  margin: auto;
   position: relative;
   z-index: 1;
   top: 0;
@@ -27,133 +30,141 @@ const Nav = styled.nav`
   background-color: #342D9F;
   transition: .5s ease;
   display: flex;
-  flex-direction: column;
+  align-content: space-between;
+  flex-direction: row;
   align-items: center;
   box-sizing: border-box;
+`;
+
+const Container = styled.div`
+width: 50%;
 `;
 
 const AddView = (props) => {
   
   const {
-    active,
-    setActive,
+    selected,
+    setSelected,
     countReset,
+    queue,
+    myQueue,
+                setQueue,
     timers,
-    Timers,
+    totalTime,
+   
   } = useContext(TimerContext);
 
   function clickStopwatch() {
-    setActive({ Stopwatch: true, Countdown: false, XY: false, Tabata: false });
+    setSelected({ Stopwatch: true, Countdown: false, XY: false, Tabata: false });
     countReset();
   }
 
   function  clickCountdown() {
-    setActive({ Stopwatch: false, Countdown: true, XY: false, Tabata: false });
+    setSelected({ Stopwatch: false, Countdown: true, XY: false, Tabata: false });
     countReset();
   }
 
   function  clickXY() {
-    setActive({ Stopwatch: false, Countdown: false, XY: true, Tabata: false });
+    setSelected({ Stopwatch: false, Countdown: false, XY: true, Tabata: false });
     countReset();
     }
 
   function  clickTabata() {
-    setActive({ Stopwatch: false, Countdown: false, XY: false, Tabata: true });
+    setSelected({ Stopwatch: false, Countdown: false, XY: false, Tabata: true });
     countReset();
   }
 
+  console.log(queue);
 
 
   
     
     
   function GetTimer() {
-    const activeStopwatch = active.Stopwatch;
-    const activeCountdown = active.Countdown;
-    const activeXY = active.XY;
-    const activeTabata = active.Tabata;
+    const selectedStopwatch = selected.Stopwatch;
+    const selectedCountdown = selected.Countdown;
+    const selectedXY = selected.XY;
+    const selectedTabata = selected.Tabata;
 
     
-    if (activeStopwatch) {
+    if (selectedStopwatch) {
       return (
         <>
           <Timer>
             <h1>Stopwatch</h1>
-            <Stopwatch></Stopwatch>
-            <Button onClick={() => {
-              Timers();
-              console.log('Clicked');
-              console.log(timers);
-            }}>Add</Button>
+            <Stopwatch />
+            <Section>
+           
+              <Button type='add' onClick={() => { queue.push(timers.stopwatch); console.log(queue); }} />
+            </Section>
           </Timer>
         </>
       );
-    } else if (activeCountdown) {
+    } else if (selectedCountdown) {
       return (
         <>
           <Timer type='countdown'>
           <h1>Countdown</h1>
-          <Countdown></Countdown>
-            <Button onClick={() => {
-              Timers('countdown');
-              console.log('Clicked');
-              console.log(timers);
-            }}>Add</Button>
+            <Countdown />
+            <Section>
+              <Button type='add' onClick={() => { queue.push(timers.countdown);  console.log(queue);}} />
+             </Section>
             </Timer>
         </>
       );
-    } else if (activeXY) {
+    } else if (selectedXY) {
       return (
         <>
           <Timer type='xy'>
           <h1>XY</h1>
-          <XY></XY>
-            <Button onClick={() => {
-              Timers('xy');
-              console.log('Clicked');
-              console.log(timers);
-            }
-            }>Add</Button>
+            <XY />
+            <Section>
+              <Button type='add' onClick={() => { queue.push(timers.xy); console.log(queue);}} />
+            </Section>
             </Timer>
         </>
       );
-    } else if (activeTabata) {
+    } else if (selectedTabata) {
       return (
         <>
           <Timer type='tabata'>
           <h1>Tabata</h1>
-          <Tabata> </Tabata>
-            <Button onClick={() => {
-              Timers('tabata');
-              console.log('Clicked');
-              console.log(timers);
-            }}>Add</Button>
+          <Tabata />
+            <Section>
+              <Button type='add' onClick={() => { queue.push(timers.tabata); console.log(queue);}} />
+            </Section>
             </Timer>
         </>);
     }
   }
+  
   return (
     <React.Fragment>
       <div>
-        <Nav>
-        <Container>
+      <Label>Select Timer(s):</Label>
+       
+          <FlexBetween>
           <Button
-            type={active.Stopwatch ? 'active' : 'default'}
+            type={selected.Stopwatch ? 'default' : 'inactive'}
             onClick={clickStopwatch}>Stopwatch</Button>
           <Button
-            type={active.Countdown ? 'active' : 'default'}
+            type={selected.Countdown ? 'default' : 'inactive'}
             onClick={clickCountdown}>Countdown</Button>
           <Button
-            type={active.XY ? 'active' : 'default'}
+            type={selected.XY ? 'default' : 'inactive'}
             onClick={clickXY}>XY</Button>
           <Button
-            type={active.Tabata ? 'active': 'default'}
+            type={selected.Tabata ? 'default': 'inactive'}
             onClick={clickTabata}>Tabata</Button>
-        </Container>
-        </Nav>
+            </FlexBetween>
+   
+        
         <Timer>
-          <GetTimer active={active} />
+          <GetTimer selected={selected} />
         </Timer>
+        <Label>Total Time:</Label>
+        <Rounds>{formatTime(totalTime)}</Rounds>
+      
         </div>
         
 </React.Fragment>
