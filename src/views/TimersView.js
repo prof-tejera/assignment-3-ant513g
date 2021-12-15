@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 import { TimerContext } from "../context/TimerProvider";
 import Navigation from "../components/generic/Navigation";
@@ -16,6 +16,8 @@ import {
 // import { useHistory } from "react-router";
 
 import Button from "../components/generic/Button";
+import Queue from "../components/generic/Queue";
+
 
 const TimerWrapper = styled.div`
   padding: 20px;
@@ -35,9 +37,27 @@ margin-bottom: 100px;
 const Timer = () => {
   const {
     queue,
-    timers
+    timers,
+    setTimer,
+    newTimer
   } = useContext(TimerContext);
  
+
+
+  // useEffect(() => {
+  //   queue.map((timer, index) => (
+  //     <TimerWrapper key={timer.id}>
+  //       <h2>{timer.id}{timer.title}</h2>
+  //       {timer.timer}
+  //       <Button onClick={() => {
+  //         queue.splice(index, 1);
+  //       }}>Remove</Button>
+  //     </TimerWrapper>
+  //   ))
+        
+  // });
+  
+  
   return (
     <React.Fragment>
       <Div>
@@ -52,15 +72,10 @@ const Timer = () => {
             </Link>
           </Container>
         </Section>
-          {queue.map((timer, index)=> (
-            <TimerWrapper key={timer.id}>
-              <h2>{timer.id}{timer.title}</h2>
-                {timer.timer}
-              <Button onClick={() => {
-                queue.splice(index, 1);
-              }}>Remove</Button>
-            </TimerWrapper>
-          ))}
+          <Queue />
+        
+       
+
         <NavWrapper>
           <Navigation />
         </NavWrapper>

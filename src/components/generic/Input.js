@@ -16,20 +16,25 @@ const BoxContainer = styled.div `
   cursor: pointer; 
 `;
   
-const Select = styled.select`
-  width: 50px;
+const Number = styled.input`
+  width: 64px;
+  height: 40px;
   display: block;
   font-family: 'Inconsolata', monospace;
-  font-size: 16px;
+  font-size: 20px;
+  font-height: 24px;
+  font-weight: 500;
   color: #f2f2f2;
   background-color: #4A4A55;
   border: none;
   text-align: center;
-  font-weight: 500;
+  padding: 0px;
   margin: 8px;
   border-radius: 8px;
   cursor: pointer; 
 `;
+
+
 
 const Option = styled.option`
 &:hover {
@@ -67,24 +72,25 @@ export const Input = (props) => {
     setState,
   } = useContext(TimerContext);
  
-  function options() {
-    var arrOptions = [];
+  // function options() {
+  //   var arrOptions = [];
 
-    for (let i = 0; i <= 59; i++) {
-      if (i < 10) {
-        i = `0${i}`;
-        arrOptions.push(<Option key={i} value={i}>{i}</Option>);
-      } else {
-        arrOptions.push(<Option key={i} value={i}>{i}</Option>);
-      }
-    }
-    return arrOptions; 
-  }
+  //   for (let i = 0; i <= 59; i++) {
+  //     if (i < 10) {
+  //       i = `0${i}`;
+  //       arrOptions.push(<Option key={i} value={i}>{i}</Option>);
+  //     } else {
+  //       arrOptions.push(<Option key={i} value={i}>{i}</Option>);
+  //     }
+  //   }
+  //   return arrOptions; 
+  // }
 
   // const selectRef = useRef();
   //   useEffect(() => {
   //     selectRef.current.focus();
   //   }, []);
+
 
   switch (value) {
     default:
@@ -95,15 +101,18 @@ export const Input = (props) => {
             value={value}>
             {name}
           </Label>
-          <Select
+      
+        <Number
+            type='number'
             // ref={selectRef} 
             name={name}
-            size="5"
-            onChange={onChange}
-            value={value}
-            id="options">
-            {options()}
-          </Select>
+            value={mm}
+            onChange={(e) => setMM(e.target.value)}
+            id="options"
+            min="0" max="59" />
+           
+   
+
         </ BoxContainer>
       );
     case 'hh':
@@ -114,19 +123,18 @@ export const Input = (props) => {
             value={hh}>
             Hours
           </Label>
-          <Select
+          <Number
+            type='number'
             // ref={selectRef} 
             name='Hours'
-            size='5'
+            min="0" max="59" 
             onChange={(e) => {
-              setHH(current => current + e.target.value);
-              setState((prevState) => ({ ...prevState, [name]: value }));
+              setHH(e.target.value);
+              // setState((prevState) => ({ ...prevState, [name]: value }));
             
             }}
             value={hh}
-            id='options'>
-            {options()}
-          </Select>
+            id='options' />
         </BoxContainer>
       );
     case 'mm':
@@ -137,15 +145,14 @@ export const Input = (props) => {
             value={mm}>
             Minutes
           </Label>
-          <Select
+          <Number
             // ref={selectRef} 
+            type='number'
             name='Minutes'
-            size="5"
+            min="0" max="59" 
             onChange={(e) => setMM(e.target.value)}
             value={mm}
-            id="options">
-            {options()}
-          </Select>
+            id="options" />
         </ BoxContainer>
       );
     case 'ss':
@@ -156,15 +163,14 @@ export const Input = (props) => {
             value={ss}>
             Seconds
           </Label>
-          <Select
+          <Number
+            type='number'
+            min="0" max="59" 
             // ref={selectRef} 
             name='Seconds'
-            size="5"
             onChange={(e) => setSS(e.target.value)}
             value={ss}
-            id="options">
-            {options()}
-          </Select>
+            id="options" />
         </ BoxContainer>
       );
     case 'restMM':
@@ -175,15 +181,14 @@ export const Input = (props) => {
             value={restMM}>
             Minutes
           </Label>
-          <Select
+          <Number
+            type='number'
+            min="0" max="59" 
             // ref={selectRef} 
             name='RestMinutes'
-            size="5"
             onChange={(e) => setRestMM(e.target.value)}
             value={restMM}
-            id="options">
-            {options()}
-          </Select>
+            id="options" />
         </ BoxContainer>
       );
     case 'restSS':
@@ -194,37 +199,19 @@ export const Input = (props) => {
             value={restSS}>
             Seconds
           </Label>
-          <Select
+          <Number
+            type='number'
+            min="0" max="59" 
             // ref={selectRef} 
             name='RestSeconds'
-            size="5"
             onChange={(e) => setRestSS(e.target.value)}
             value={restSS}
-            id="options">
-            {options()}
-          </Select>
+            id="options" />
         </ BoxContainer>
       );
   }
   
-  // return (
-  //   <BoxContainer>
-  //     <Label
-  //       HTMLfor={name}
-  //       value={value}>
-  //       {name}
-  //     </Label>
-  //     <Select
-  //       name={name}
-  //       size="5"
-  //       onChange={onChange}
-  //       value={value}
-  //       id="options"
-  //       >
-  //       {options()}
-  //     </Select>
-  //   </ BoxContainer>
-  // );
+
 }
 
 export default Input;

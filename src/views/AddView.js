@@ -47,8 +47,12 @@ const AddView = (props) => {
     setSelected,
     countReset,
     queue,
-    myQueue,
-                setQueue,
+    time,
+    state,
+    setQueue,
+    timer,
+    setTimer,
+    // newTimer,
     timers,
     totalTime,
    
@@ -73,12 +77,7 @@ const AddView = (props) => {
     setSelected({ Stopwatch: false, Countdown: false, XY: false, Tabata: true });
     countReset();
   }
-
-  console.log(queue);
-
-
   
-    
     
   function GetTimer() {
     const selectedStopwatch = selected.Stopwatch;
@@ -86,7 +85,6 @@ const AddView = (props) => {
     const selectedXY = selected.XY;
     const selectedTabata = selected.Tabata;
 
-    
     if (selectedStopwatch) {
       return (
         <>
@@ -95,7 +93,10 @@ const AddView = (props) => {
             <Stopwatch />
             <Section>
            
-              <Button type='add' onClick={() => { queue.push(timers.stopwatch); console.log(queue); }} />
+              <Button type='add' onClick={() => {
+                setQueue(queue => [...queue, timers.stopwatch]);
+                // setQueue(queue => [...queue, timer:timers.stopwatch]);
+              }} />
             </Section>
           </Timer>
         </>
@@ -107,7 +108,11 @@ const AddView = (props) => {
           <h1>Countdown</h1>
             <Countdown />
             <Section>
-              <Button type='add' onClick={() => { queue.push(timers.countdown);  console.log(queue);}} />
+              <Button type='add'
+                onClick={() => {
+                  setQueue(queue => [...queue, timers.countdown]);
+                  console.log(queue);
+                }} />
              </Section>
             </Timer>
         </>
@@ -119,7 +124,9 @@ const AddView = (props) => {
           <h1>XY</h1>
             <XY />
             <Section>
-              <Button type='add' onClick={() => { queue.push(timers.xy); console.log(queue);}} />
+              <Button type='add' onClick={() => {
+                 setQueue(queue => [...queue, timers.xy]);
+              }} />
             </Section>
             </Timer>
         </>
@@ -131,7 +138,9 @@ const AddView = (props) => {
           <h1>Tabata</h1>
           <Tabata />
             <Section>
-              <Button type='add' onClick={() => { queue.push(timers.tabata); console.log(queue);}} />
+              <Button type='add' onClick={() => {
+                 setQueue(queue => [...queue, timers.tabata]);
+              }} />
             </Section>
             </Timer>
         </>);
@@ -142,7 +151,7 @@ const AddView = (props) => {
     <React.Fragment>
       <div>
       <Label>Select Timer(s):</Label>
-       
+      
           <FlexBetween>
           <Button
             type={selected.Stopwatch ? 'default' : 'inactive'}

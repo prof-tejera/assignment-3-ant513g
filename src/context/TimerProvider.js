@@ -8,6 +8,15 @@ import Stopwatch from "../components/timers/Stopwatch";
 import Countdown from "../components/timers/Countdown";
 import XY from "../components/timers/XY";
 import Tabata from "../components/timers/Tabata";
+import styled from 'styled-components';
+import Button from '../components/generic/Button';
+
+const TimerWrapper = styled.div`
+  padding: 20px;
+  margin: 10px;
+  font-size: 1.3rem;
+  text-align: center;
+`;
 
 
 export const TimerContext = createContext({});
@@ -19,17 +28,19 @@ const routes = {
 };
 
 const TimerProvider = ({ children }) => {
-   
     
+    //Sounds
     const [play] = useSound(singleBeep);
     const [doneStop] = useSound(done);
 
+
     const initialState = {
         isRunning: false,
+        isFinished: false,
+        inQueue: false,
         time: 0,
         rounds: 1,
     };
-    
 
     function StateReducer(state, action) {
         switch (action.type) {
@@ -53,7 +64,6 @@ const TimerProvider = ({ children }) => {
                     return { ...state, isRunning: true, rounds: state.rounds - 1 };
                 }
             }
-            
             case 'countUp':
                 return { ...state, time: state.time + 1, currentRound: state.currentRound };
             case 'countDown':
@@ -66,23 +76,32 @@ const TimerProvider = ({ children }) => {
                 } else {
                     return { ...state, rounds: state.rounds - 1 };
                 }
+            case 'running':
+                return { ...state, isRunning: true, };
             default:
                 throw new Error();
         }
     }
         
    
-
-    // function timerState() {
-    //     if (timer.selected) {
-    //         set
+    // const getState = (timer, index) => {
+    //     if (timer.time === 0 && isActive) {
+    //         removeItem(index);
+    //         setState(done);
+    //     } else {
+            
     //     }
-    // }
+            
+            
+    //     if (index === 0) {
+    //         setState(isRunning);
+    //         setState(isActive);
+    //     } else {
+    //         setState(isActive);
 
-   
-    // useEffect(() => {
+    //     }
         
-    //   }, );
+    // }
 
 
     // if (timer.selected == isRunning ) {
@@ -119,7 +138,6 @@ const TimerProvider = ({ children }) => {
     const [currentRound, setCurrentRound] = useState(1);
     const [resting, setResting] = useState(false);
 
-    const [myQueue, setQueue] = useState([]);
 
     const [count, setCount] = useState(0);
     const [laps, setLaps] = useState([]);
@@ -137,6 +155,7 @@ const TimerProvider = ({ children }) => {
     function incrementRounds() {
         setState({ type: 'incrementRounds' });
     }
+
     function decrementRounds() {
         setState({ type: 'decrementRounds' });
     }
@@ -201,37 +220,62 @@ const TimerProvider = ({ children }) => {
         } 
     }
 
-    const queue = [];
+    
+    const [queue, setQueue] = useState([
+        // index: '',
+        // timer: '',
+        // time: '',
+        // isRunning: false,
+        // onQueue: false,
+        // isDone: false
+    ]);
+
 
     const timers =
     {
         stopwatch: {
             title: 'Stopwatch',
-            timer: <Stopwatch></Stopwatch>
-
+            timer: <Stopwatch></Stopwatch>,
+            initaltime: 0
         },
         countdown: {
             title: 'Countdown',
-            timer: <Countdown></Countdown>
+            timer: <Countdown></Countdown>,
+            initaltime: 0
         },
         xy: {
             title: 'XY',
-            timer: <XY></XY>
+            timer: <XY></XY>,
+            initaltime: 0
         },
         tabata: {
             title: 'Tabata',
-            timer: <Tabata></Tabata>
+            timer: <Tabata></Tabata>,
+            initaltime: 0
         }
     };
+
+
+    const [timer, setTimer] = useState([]);
+   
+    const removeItem = (index) => {
+        setQueue(queue =>
+            queue.filter((value, i) => i !== index)
+        );
+        console.log(queue);
+    };
+
 
 
     return (
         <TimerContext.Provider
             value={{
-                myQueue,
+                removeItem,
+                timer,
+                setTimer,
+                queue,
                 setQueue,
                 timers,
-                queue,
                 selected,
                 setSelected,
                 count,

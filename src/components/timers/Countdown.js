@@ -23,15 +23,15 @@ const Countdown = () => {
     timers,
   } = useContext(TimerContext);
  
-
+  
   const intervalRef = useInterval(() => {
     if (state.isRunning && time !== 0) {
       setTime(countDown);
-    } else if (time === 0) {
-      timerDone();
-      window.clearInterval(intervalRef.current);
     } else {
       window.clearInterval(intervalRef.current);
+      if (time === 0) {
+        timerDone();
+      } 
     }
   },  state.isRunning ? 1000 : null );
 
