@@ -1,7 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import Colors from '../../theme/Colors';
-import Typography from '../../theme/Colors';
-import Spacing from '../../theme/Spacing';
 
 const GlobalStyle = createGlobalStyle`
 html, body {
@@ -18,6 +16,10 @@ body {
     overflow: auto;
     color: ${Colors.white};
     font-family: 'Inconsolata', monospace;
+}
+
+h3 {
+  
 }
 `;
 

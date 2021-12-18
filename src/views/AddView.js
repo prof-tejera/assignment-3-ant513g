@@ -1,17 +1,17 @@
-import React, { useContext } from "react";
-import styled from "styled-components";
-import { TimerContext } from "../context/TimerProvider";
-import Stopwatch from "../components/timers/Stopwatch";
-import Countdown from "../components/timers/Countdown";
-import XY from "../components/timers/XY";
-import Tabata from "../components/timers/Tabata";
-// import { useHistory } from "react-router";
-import Button from "../components/generic/Button";
-import { Section, Label, FlexBetween } from "../utils/containers";
-import { formatTime } from "../utils/helpers";
-import { Rounds } from "../utils/containers";
-  
-  
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+import { TimerContext } from '../context/TimerProvider';
+import Stopwatch from '../components/timers/Stopwatch';
+import Countdown from '../components/timers/Countdown';
+import XY from '../components/timers/XY';
+import Tabata from '../components/timers/Tabata';
+import Button from '../components/generic/Button';
+import { Section, Label, FlexBetween } from '../utils/containers';
+import { formatTime } from '../utils/helpers';
+import { Rounds } from '../utils/containers';
+import { LargeLabel } from '../utils/containers';
+import { Link } from 'react-router-dom';
+
 const Timer = styled.div`
   padding: 20px;
   margin: 10px;
@@ -19,66 +19,33 @@ const Timer = styled.div`
   text-align: center;
 `;
 
-const Nav = styled.nav`
-  height: auto;
-  width: 100%;
-  margin: auto;
-  position: relative;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #342D9F;
-  transition: .5s ease;
-  display: flex;
-  align-content: space-between;
-  flex-direction: row;
-  align-items: center;
-  box-sizing: border-box;
-`;
-
-const Container = styled.div`
-width: 50%;
-`;
-
 const AddView = (props) => {
   
   const {
+    sum,
     selected,
     setSelected,
-    countReset,
     queue,
-    time,
-    state,
     setQueue,
-    timer,
-    setTimer,
-    // newTimer,
-    timers,
-    totalTime,
-   
+    times,
   } = useContext(TimerContext);
 
   function clickStopwatch() {
     setSelected({ Stopwatch: true, Countdown: false, XY: false, Tabata: false });
-    countReset();
   }
 
   function  clickCountdown() {
     setSelected({ Stopwatch: false, Countdown: true, XY: false, Tabata: false });
-    countReset();
   }
 
   function  clickXY() {
     setSelected({ Stopwatch: false, Countdown: false, XY: true, Tabata: false });
-    countReset();
     }
 
   function  clickTabata() {
     setSelected({ Stopwatch: false, Countdown: false, XY: false, Tabata: true });
-    countReset();
   }
   
-    
   function GetTimer() {
     const selectedStopwatch = selected.Stopwatch;
     const selectedCountdown = selected.Countdown;
@@ -92,11 +59,11 @@ const AddView = (props) => {
             <h1>Stopwatch</h1>
             <Stopwatch />
             <Section>
-           
-              <Button type='add' onClick={() => {
-                setQueue(queue => [...queue, timers.stopwatch]);
-                // setQueue(queue => [...queue, timer:timers.stopwatch]);
-              }} />
+              <Button type='add' onClick={() => { setQueue([...queue, times.stopwatch]);  }} />
+              <br />
+              <Link to='/'>
+                  <Button>Back</Button>
+              </Link>
             </Section>
           </Timer>
         </>
@@ -105,16 +72,16 @@ const AddView = (props) => {
       return (
         <>
           <Timer type='countdown'>
-          <h1>Countdown</h1>
+            <h1>Countdown</h1>
             <Countdown />
             <Section>
-              <Button type='add'
-                onClick={() => {
-                  setQueue(queue => [...queue, timers.countdown]);
-                  console.log(queue);
-                }} />
-             </Section>
-            </Timer>
+              <Button type='add' onClick={() => { setQueue([...queue, times.countdown]) }} />
+              <br />
+              <Link to='/'>
+                  <Button>Back</Button>
+              </Link>
+            </Section>
+          </Timer>
         </>
       );
     } else if (selectedXY) {
@@ -124,11 +91,14 @@ const AddView = (props) => {
           <h1>XY</h1>
             <XY />
             <Section>
-              <Button type='add' onClick={() => {
-                 setQueue(queue => [...queue, timers.xy]);
-              }} />
+              <Button type='add'
+                onClick={() => { setQueue([...queue, times.xy]) }} />
+              <br />
+              <Link to='/'>
+                  <Button>Back</Button>
+              </Link>
             </Section>
-            </Timer>
+          </Timer>
         </>
       );
     } else if (selectedTabata) {
@@ -138,45 +108,42 @@ const AddView = (props) => {
           <h1>Tabata</h1>
           <Tabata />
             <Section>
-              <Button type='add' onClick={() => {
-                 setQueue(queue => [...queue, timers.tabata]);
-              }} />
+              <Button type='add' onClick={() => { setQueue([...queue, times.tabata]) }} /><br />
+              <Link to='/'>
+                  <Button>Back</Button>
+              </Link>
             </Section>
-            </Timer>
-        </>);
+          </Timer>
+        </>
+      );
     }
   }
-  
   return (
-    <React.Fragment>
-      <div>
-      <Label>Select Timer(s):</Label>
-      
+      <Section>
+        <LargeLabel>Select Timer(s):</LargeLabel>
+        <Section>
           <FlexBetween>
-          <Button
-            type={selected.Stopwatch ? 'default' : 'inactive'}
-            onClick={clickStopwatch}>Stopwatch</Button>
-          <Button
-            type={selected.Countdown ? 'default' : 'inactive'}
-            onClick={clickCountdown}>Countdown</Button>
-          <Button
-            type={selected.XY ? 'default' : 'inactive'}
-            onClick={clickXY}>XY</Button>
-          <Button
-            type={selected.Tabata ? 'default': 'inactive'}
-            onClick={clickTabata}>Tabata</Button>
-            </FlexBetween>
-   
-        
+            <Button
+              type={selected.Stopwatch ? 'default' : 'inactive'}
+              onClick={clickStopwatch}>Stopwatch</Button>
+            <Button
+              type={selected.Countdown ? 'default' : 'inactive'}
+              onClick={clickCountdown}>Countdown</Button>
+            <Button
+              type={selected.XY ? 'default' : 'inactive'}
+              onClick={clickXY}>XY</Button>
+            <Button
+              type={selected.Tabata ? 'default': 'inactive'}
+              onClick={clickTabata}>Tabata</Button>
+          </FlexBetween>
+        </Section>
         <Timer>
-          <GetTimer selected={selected} />
-        </Timer>
+        <GetTimer selected={selected} />
         <Label>Total Time:</Label>
-        <Rounds>{formatTime(totalTime)}</Rounds>
-      
-        </div>
+        <Rounds>{formatTime(sum)}</Rounds>
+        </Timer>
         
-</React.Fragment>
+      </Section>
     );
 }
 

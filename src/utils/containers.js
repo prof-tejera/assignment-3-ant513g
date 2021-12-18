@@ -1,20 +1,17 @@
-import styled from "styled-components";
-
+import styled from 'styled-components';
+import Colors from '../theme/Colors';
 
 export const Panel = styled.div`
   box-sizing: border-box;
-  background: rgb(37,37,60);
+  background: ${Colors.surfaceDark};
   background: linear-gradient(90deg, rgba(37,37,60,1) 0%, rgba(47,47,55,1) 100%);
   border-radius: 16px;
   padding: 2rem;
   display: block;
-  justify-content: space-evenly;
   overflow: auto;
-  box-sizing: border-box;
-  min-width: 500px;
-  max-width: 700px;
   box-shadow:  1px 1px 5px #2F2F37;
   margin: auto;
+  width: 60%;
 `;
 
 export const Container = styled.div`
@@ -29,6 +26,15 @@ export const Container = styled.div`
 export const FlexBetween = styled(Container)`
   justify-content: space-between;
   min-width: 80px;
+ 
+  & > span::after {
+    content: '|';
+    color: ${Colors.black};
+    margin: 10px;
+  }
+  & > span:last-child::after {
+    content: '';
+  }
 `;
 
 export const FlexCenter = styled(Container)`
@@ -43,7 +49,7 @@ export const Display = styled.section`
   overflow: auto;
   width: 100%;
   text-align: center;
-  background-color: #4A4A55;
+  background-color: #484661;
   border-radius: 8px;
   color: white;
   box-shadow: inset 0 0 10px #1C1C21;
@@ -100,28 +106,62 @@ export const Li = styled.li`
   color: white;
   display: flex;
   justify-content: space-between;
+  margin: 1rem auto;
 `;
-
 
 export const ListUl = styled.ul`
   list-style-type: none;
   margin: 0;
   padding: 0;
+  overflow: scroll;
+  padding: 1rem 0 0 0;
+  max-height: 200px;
 `;
-
 
 export const HR = styled.hr`
   border: 0;
   height: 1px;
-  background: #25253C;
+  background: ${Colors.surfaceDark};
   background-image: linear-gradient(to right, #342D9F, #4037C4, #342D9F);
 `;
 
 export const Border = styled.div`
-  background: #342D9F;
+  background: ${Colors.oceanblue500};
   border-radius: 16px;
   padding: 1.5rem;
 `;
 
+export const QueueSurface = styled.div`
+  // background: ${Colors.oceanblue700};
+  // background: #3E3B54;
+  border-radius: 16px;
+  padding: 1.5rem;
+  min-width: 500px;
+  max-width: 700px;
+  margin: 0 auto 10rem auto;
+  text-align: center;
+  `;
+
+export const QueueCard = styled.div`
+  background: ${Colors.oceanblue700};
+  align-content: center;
+  justify-content: center;
+  margin: 16px;
+  font-size: 20px;
+  border-radius: 16px;
+  position: relative;
+  height: 100px;
+  display: flex;
+  padding: 20px;
+  `;
+
+export const NavWrapper = styled.div`
+  margin: auto;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  right: 0;
+`;
 
 export default Display;

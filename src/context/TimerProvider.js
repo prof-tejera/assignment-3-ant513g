@@ -4,28 +4,14 @@ import singleBeep from '../audio/singleBeep.mp3';
 import done from '../audio/done.mp3';
 import convertToMs from '../utils/helpers';
 import { totalTimeXY, totalTimeTabata } from '../utils/helpers';
-import Stopwatch from "../components/timers/Stopwatch";
-import Countdown from "../components/timers/Countdown";
-import XY from "../components/timers/XY";
-import Tabata from "../components/timers/Tabata";
-import styled from 'styled-components';
-import Button from '../components/generic/Button';
-
-const TimerWrapper = styled.div`
-  padding: 20px;
-  margin: 10px;
-  font-size: 1.3rem;
-  text-align: center;
-`;
-
+import { formatTime } from '../utils/helpers';
+import useInterval from '../hooks/hooks';
+import Stopwatch from '../components/timers/Stopwatch';
+import Countdown from '../components/timers/Countdown';
+import XY from '../components/timers/XY';
+import Tabata from '../components/timers/Tabata';
 
 export const TimerContext = createContext({});
-
-const routes = {
-    HOME: '/',
-    ADD: '/add',
-    DOCS: '/docs',
-};
 
 const TimerProvider = ({ children }) => {
     
@@ -33,32 +19,84 @@ const TimerProvider = ({ children }) => {
     const [play] = useSound(singleBeep);
     const [doneStop] = useSound(done);
 
+    //Get Input
+    const [timeVal, setTimeVal] = useState({
+        hh: Math.abs(0),
+        mm: Math.abs(0),
+        ss: Math.abs(0),
+    });
 
+   
+    const [time, setTime] = useState(0);
+    const getMs = Number(convertToMs(timeVal.hh, timeVal.mm, timeVal.ss));
+    const [timer, setTimer] = useState(getMs);
+    const getRestMs = Number(convertToMs(0, timeVal.mm, timeVal.ss));
+
+    const initialQueue = {
+        initialTime: ''
+    };
+
+    const [queue, setQueue] = useState([], initialQueue);
+
+   function removeItem(index) {
+        if (queue.length > 0) {
+            setQueue(queue =>
+                queue.filter((value, i) => i !== index));
+        }
+    };
+
+    var sum = 0;
+
+    queue.forEach(timer => {
+        sum += Number(timer.totalTime);
+    });
+
+    
     const initialState = {
-        isRunning: false,
+        hasStarted: false,
+        isRunning: queue.isRunning,
         isFinished: false,
         inQueue: false,
-        time: 0,
+        initialTime: 0,
+        totalTime: 0,
+        totalRoundTime: 0,
         rounds: 1,
+        timer: '',
     };
 
     function StateReducer(state, action) {
         switch (action.type) {
-            case 'start':
-                return { ...state, isRunning: true };
+            case 'start': {
+                
+                if(!state.hasStarted && queue.length !== 0) {
+                    setTime(queue[0].initialTime);
+                }
+                return { ...state, hasStarted: true, isRunning: true, initialTime: time};
+            }
             case 'stop':
-                return { ...state, isRunning: false };
+                return { ...state, isRunning: false};
+            case 'done':
+                if (queue.length === 1) {
+                    removeItem(0);
+                    return {...state, isRunning: false}
+                } else if (queue.length > 1) {
+                    removeItem(0);
+                    setTime(queue[1].initialTime);
+                     return { ...state, isRunning: true};
+                }
+                break;
             case 'reset':
                 return {
                     isRunning: false,
-                    time: 0,
                     rounds: 1,
+                    setQueue: [],
+                    totalTime: 0,
                 };
             case 'lap': {
                 return { time: state.time + 1 }
             }
             case 'fastForward': {
-                if (state.rounds <= 1) {
+                if (rounds <= 1) {
                     return { ...state, isRunning: true, rounds: 1 }
                 } else {
                     return { ...state, isRunning: true, rounds: state.rounds - 1 };
@@ -71,86 +109,47 @@ const TimerProvider = ({ children }) => {
             case 'incrementRounds':
                 return { ...state, rounds: state.rounds + 1 };
             case 'decrementRounds':
-                if (state.rounds <= 1) {
+                if (rounds <= 1) {
                     return { ...state, rounds: 1 }
                 } else {
                     return { ...state, rounds: state.rounds - 1 };
                 }
             case 'running':
                 return { ...state, isRunning: true, };
+            case 'inQueue':
+               
+                return {...state, isRunning: false, isFinished: false, inQueue: true, time: state.initialTime};
+            
             default:
                 throw new Error();
         }
     }
-        
-   
-    // const getState = (timer, index) => {
-    //     if (timer.time === 0 && isActive) {
-    //         removeItem(index);
-    //         setState(done);
-    //     } else {
-            
-    //     }
-            
-            
-    //     if (index === 0) {
-    //         setState(isRunning);
-    //         setState(isActive);
-    //     } else {
-    //         setState(isActive);
-
-    //     }
-        
-    // }
-
-
-    // if (timer.selected == isRunning ) {
-    //     if(timer.selected == done) {
-    //          }   remove from queue,
-    // }
-    // when queue == 0 and timer.done
-    // {
-    //     workout == done.
-    // }
 
     const [state, setState] = useReducer(StateReducer, initialState);
-    
+
     const {
         isRunning,
-        isFinished,
-        inQueue,
+        totalTime,
         rounds,
     } = state;
 
     const [selected, setSelected] = useState({ Stopwatch: true, Countdown: false, XY: false, Tabata: false });
-    
-    const [totalTime, setTotalTime] = React.useState(0);
-    const [time, setTime] = useState(0);
-
-    const [hh, setHH] = React.useState(0);
-    const [mm, setMM] = React.useState(0);
-    const [ss, setSS] = React.useState(0);
     const [restMM, setRestMM] = useState(0);
     const [restSS, setRestSS] = useState(0);
-  
+    const totalXY = parseInt(totalTimeXY(timeVal.hh, timeVal.mm, timeVal.ss, state.rounds));
+    const totalTabata = parseInt(totalTimeTabata(timeVal.hh, timeVal.mm, timeVal.ss, restMM, restSS, state.rounds));
+    const [timeElapsed, setTimeElapsed] = useState(0);
+ 
     const [roundTime, setRoundTime] = useState(0);
-    const [restTime, setRestTime] = useState(0);
+
+    const [restTime, setRestTime] = useState(getRestMs);
     const [currentRound, setCurrentRound] = useState(1);
     const [resting, setResting] = useState(false);
-
 
     const [count, setCount] = useState(0);
     const [laps, setLaps] = useState([]);
     const [currentLap, setCurrentLap] = useState(0);
     const [sets, setSets] = useState(0);
-   
-    const [value, setValue] = useState(0);
-  
-    let getMs = Number(convertToMs(hh, mm, ss));
-    let getRestMs = Number(convertToMs(0, mm, ss));
-
-    const totalXY = parseInt(totalTimeXY(hh, mm, ss, state.rounds));
-    const totalTabata = parseInt(totalTimeTabata(hh, mm, ss, restMM, restSS, state.rounds));
 
     function incrementRounds() {
         setState({ type: 'incrementRounds' });
@@ -161,39 +160,36 @@ const TimerProvider = ({ children }) => {
     }
 
     function countUp() {
-        setTime(time + 1);
-        // setState({ type: 'countUp' });
-        return time;
+        setTime(Math.abs(time + 1));
+        return Number(time);
     }
 
     function countDown() {
-        setTime(time - 1);
-        // setState({ type: 'countDown' });
+        setTime(Math.abs(time - 1));
         return Number(time);
     }
     
     function timerDone() {
-        doneStop();
+        setTime(0);
         countReset();
+        setState({ type: 'stop' });
+        doneStop();
     }
 
     function roundDone() {
         play();
     }
-
   
     function countReset() {
         setState({ type: 'reset' });
         setTime(0);
-        setSS(0);
-        setMM(0);
-        setHH(0);
         setRestSS(0);
         setRestMM(0);
         setCurrentRound(1);
-        setTotalTime(0);
         laps.splice(0, laps.length + 1);
-   }
+        queue.splice(0, queue.length);
+        setTimeElapsed(0);
+    }
     
     function fastForward() {
         if (selected.XY) {
@@ -203,7 +199,6 @@ const TimerProvider = ({ children }) => {
                 setState({ type: 'stop' });
             } else {
                 setState({ type: 'fastForward' });
-                setTotalTime(totalTime - roundTime);
                 setTime(roundTime - 1);
             }
         } else {
@@ -213,69 +208,196 @@ const TimerProvider = ({ children }) => {
                 setState({ type: 'stop' });
             } else {
                 setState({ type: 'fastForward' });
-                setTotalTime(totalTime - roundTime - restTime);
                 setTime(roundTime - 1);
                 setResting(false);
             }
-        } 
+        }
     }
-
     
-    const [queue, setQueue] = useState([
-        // index: '',
-        // timer: '',
-        // time: '',
-        // isRunning: false,
-        // onQueue: false,
-        // isDone: false
-    ]);
+     
+const [currentTimer, setCurrentTimer] = useState('');
+
+    useEffect(() => {
+       
+            if (!state.hasStarted && state.isRunning) {
+                if (currentTimer === 'XY') { 
+                    if(time === 0 && queue.length !== 0){
+                        removeItem(0); 
+                    } else if (time === 0 && currentRound <= state.rounds) {
+                        setCurrentRound(currentRound + 1);
+                        setTime(queue[0].totalRoundTime);
+                    }
+                }
+            } else if (state.hasStarted && state.isRunning && time === 0) {
+                if (currentTimer === 'XY') {
+                    if (currentRound < state.rounds) {
+                        if(queue.length === 1) { // LAST TIMER
+                            setCurrentRound(currentRound + 1);
+                            setTime(queue[0].initialTime); 
+                            roundDone(); 
+                        } else {
+                            setCurrentRound(currentRound + 1);
+                            setTime(queue[0].initialTime); 
+                        }
+                    } else if (currentRound === state.rounds) {
+                        if(queue.length > 1) {
+                            removeItem(0);
+                            setCurrentRound(1);
+                            setTime(queue[1].initialTime); 
+                        } else if(queue.length === 1){ //Done
+                            removeItem(0);
+                            countReset();
+                            timerDone();
+                            setState({ type: 'stop' });
+                        }
+                    }   
+                }
+                if(currentTimer === 'Tabata') {
+                    if(!resting){
+                        setResting(true);
+                        setTime(queue[0].restTime);
+                    } else {
+                    setResting(false);
+                    }
+                    if (currentRound < state.rounds && resting) {
+                        if(queue.length === 1) { 
+                            setCurrentRound(currentRound + 1);
+                            setTime(queue[0].initialTime); 
+                            roundDone(); 
+                        } else {
+                            setCurrentRound(currentRound + 1);
+                            setTime(queue[0].initialTime); 
+                            roundDone(); 
+                        }
+                    } else if (currentRound === state.rounds && resting) {
+                        if(queue.length > 1) {
+                            removeItem(0);
+                            setCurrentRound(1);
+                            setTime(queue[1].initialTime); 
+                        } else if(queue.length === 1){ 
+                            removeItem(0);
+                            countReset();
+                            timerDone();
+                            setState({ type: 'stop' });
+                        }
+                    }
+                }
+            }
+    
+
+        if (!state.hasStarted && state.isRunning && time === 0 && queue.length !== 0 && currentTimer === 'Countdown') {
+                removeItem(0); 
+        } else if (state.hasStarted && state.isRunning && time === 0 && queue.length > 1 && currentTimer === 'Countdown') {
+                removeItem(0);
+                setTime(queue[1].initialTime); 
+        } else if (state.hasStarted && state.isRunning && time === 0 && queue.length === 1 && currentTimer === 'Countdown') {
+                removeItem(0);
+                countReset();
+                timerDone();
+                setState({ type: 'stop' });
+        } 
+    },[time]);
 
 
-    const timers =
-    {
+
+
+    const intervalRef = useInterval(() => {
+        setTimeElapsed(Number(timeElapsed + 1));
+        if (state.hasStarted && state.isRunning && queue > 0) {
+            setTime(queue[0].initialTime);
+        } 
+        if(state.isRunning) {
+            if (queue[0].title === 'Stopwatch') {
+                setCurrentTimer('Stopwatch');
+                setTime(countUp);
+            } else if (queue[0].title === 'Countdown') {
+                setCurrentTimer('Countdown');
+                setTime(queue[0].initialTime);
+                setTime(countDown);
+            } else if (queue[0].title === 'XY') {
+                setCurrentTimer('XY');
+                setTime(queue[0].initialTime);
+                setTime(countDown);
+            } else if (queue[0].title === 'Tabata') {
+                setCurrentTimer('Tabata');
+                setTime(queue[0].initialTime);
+                setTime(countDown);
+            } 
+        } else {
+          window.clearInterval(intervalRef.current);
+        } 
+    }, state.isRunning ? 1000 : null);
+   
+    const TimeDisplay = () => {
+        if (queue.length < 0) {
+          return formatTime(time);
+        } else {
+          return formatTime(time);
+        }
+    }
+    const times = {
         stopwatch: {
             title: 'Stopwatch',
-            timer: <Stopwatch></Stopwatch>,
-            initaltime: 0
+            timer: <Stopwatch />,
+            initialTime: 0,
+            isRunning: state.isRunning,
+            isFinished: false,
+            inQueue: true,
+            totalTime: 0,
         },
         countdown: {
             title: 'Countdown',
-            timer: <Countdown></Countdown>,
-            initaltime: 0
+            timer: <Countdown/>,
+            initialTime: getMs,
+            isRunning: state.isRunning,
+            isFinished: false,
+            inQueue: true,
+            totalTime: getMs,
+            totalRoundTime: 0,
         },
         xy: {
             title: 'XY',
-            timer: <XY></XY>,
-            initaltime: 0
+            timer: <XY />,
+            initialTime: getMs,
+            isRunning: state.isRunning,
+            isFinished: false,
+            inQueue: true,
+            totalTime: (getMs * state.rounds),
+            totalRoundTime: getMs,
+            rounds: state.rounds,
         },
         tabata: {
             title: 'Tabata',
-            timer: <Tabata></Tabata>,
-            initaltime: 0
+            timer: <Tabata />,
+            initialTime: getMs,
+            isRunning: state.isRunning,
+            isFinished: false,
+            inQueue: true,
+            totalTime: ((getMs + getRestMs) * state.rounds),
+            totalRoundTime: getMs,
+            rounds: state.rounds,
+            restTime: getRestMs,
         }
     };
-
-
-    const [timer, setTimer] = useState([]);
-   
-    const removeItem = (index) => {
-        setQueue(queue =>
-            queue.filter((value, i) => i !== index)
-        );
-        console.log(queue);
-    };
-
-
+    
+   var total = sum - Number(timeElapsed);
 
     return (
         <TimerContext.Provider
             value={{
+                timeElapsed,
+                sum,
+                TimeDisplay,
+                timeVal,
+                setTimeVal,
                 removeItem,
+                getMs,
+                setTime,
+                time,
                 timer,
                 setTimer,
                 queue,
                 setQueue,
-                timers,
                 selected,
                 setSelected,
                 count,
@@ -295,15 +417,7 @@ const TimerProvider = ({ children }) => {
                 isRunning,
                 state,
                 setState,
-                time,
-                setTime,
-                setTotalTime,
                 totalTime,
-                value,
-                setValue,
-                ss, setSS,
-                mm, setMM,
-                hh,setHH,
                 restSS, setRestSS,
                 restMM, setRestMM,
                 countReset,
@@ -314,7 +428,6 @@ const TimerProvider = ({ children }) => {
                 play,
                 doneStop,
                 roundDone,
-                getMs,
                 getRestMs,
                 roundTime,
                 setRoundTime,
@@ -324,7 +437,7 @@ const TimerProvider = ({ children }) => {
                 setCurrentLap,
                 resting,
                 setResting,
-                
+                 times
             }}
         >
             

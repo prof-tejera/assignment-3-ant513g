@@ -1,7 +1,6 @@
-import React, { useContext, useRef, useEffect } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { TimerContext } from '../../context/TimerProvider';
-
 
 const BoxContainer = styled.div `
   text-align: center;
@@ -34,15 +33,6 @@ const Number = styled.input`
   cursor: pointer; 
 `;
 
-
-
-const Option = styled.option`
-&:hover {
-  font-weight: 700;
-  background-color: #4037C4;
-}
-`;
-
 const Label = styled.label`
   font-family: 'Courier Prime', monospace;
   font-size: 16px;
@@ -53,87 +43,36 @@ const Label = styled.label`
   text-align: center;
 `;
 
-
 export const Input = (props) => {
 
-  const { onChange, value, name } = props;
+  const { value } = props;
   
   const {
-    ss,
-    setSS,
-    mm,
-    setMM,
-    hh,
-    setHH,
     restSS,
     setRestSS,
     restMM,
     setRestMM,
-    setState,
+    timeVal,
+    setTimeVal
   } = useContext(TimerContext);
- 
-  // function options() {
-  //   var arrOptions = [];
-
-  //   for (let i = 0; i <= 59; i++) {
-  //     if (i < 10) {
-  //       i = `0${i}`;
-  //       arrOptions.push(<Option key={i} value={i}>{i}</Option>);
-  //     } else {
-  //       arrOptions.push(<Option key={i} value={i}>{i}</Option>);
-  //     }
-  //   }
-  //   return arrOptions; 
-  // }
-
-  // const selectRef = useRef();
-  //   useEffect(() => {
-  //     selectRef.current.focus();
-  //   }, []);
-
 
   switch (value) {
-    default:
-      return (
-        <BoxContainer>
-          <Label
-            HTMLfor={name}
-            value={value}>
-            {name}
-          </Label>
-      
-        <Number
-            type='number'
-            // ref={selectRef} 
-            name={name}
-            value={mm}
-            onChange={(e) => setMM(e.target.value)}
-            id="options"
-            min="0" max="59" />
-           
-   
-
-        </ BoxContainer>
-      );
     case 'hh':
       return (
         <BoxContainer>
           <Label
             HTMLfor='Hours'
-            value={hh}>
+            value={timeVal.hh}>
             Hours
           </Label>
           <Number
             type='number'
-            // ref={selectRef} 
             name='Hours'
-            min="0" max="59" 
+            min='0' max='59'
             onChange={(e) => {
-              setHH(e.target.value);
-              // setState((prevState) => ({ ...prevState, [name]: value }));
-            
+              setTimeVal({ ...timeVal, hh: e.target.value });
             }}
-            value={hh}
+            value={timeVal.hh}
             id='options' />
         </BoxContainer>
       );
@@ -142,17 +81,18 @@ export const Input = (props) => {
         <BoxContainer>
           <Label
             HTMLfor='Minutes'
-            value={mm}>
+            value={timeVal.mm}>
             Minutes
           </Label>
           <Number
-            // ref={selectRef} 
             type='number'
             name='Minutes'
-            min="0" max="59" 
-            onChange={(e) => setMM(e.target.value)}
-            value={mm}
-            id="options" />
+            min='0' max='59' 
+            onChange={(e) => {
+              setTimeVal({ ...timeVal, mm: e.target.value });
+             }}
+            value={timeVal.mm}
+            id='options' />
         </ BoxContainer>
       );
     case 'ss':
@@ -160,17 +100,18 @@ export const Input = (props) => {
         <BoxContainer>
           <Label
             HTMLfor='Seconds'
-            value={ss}>
+            value={timeVal.ss}>
             Seconds
           </Label>
           <Number
             type='number'
-            min="0" max="59" 
-            // ref={selectRef} 
+            min='0' max='59' 
             name='Seconds'
-            onChange={(e) => setSS(e.target.value)}
-            value={ss}
-            id="options" />
+            onChange={(e) => {
+              setTimeVal({ ...timeVal, ss: e.target.value });
+              }}
+            value={timeVal.ss}
+            id='options' />
         </ BoxContainer>
       );
     case 'restMM':
@@ -183,12 +124,11 @@ export const Input = (props) => {
           </Label>
           <Number
             type='number'
-            min="0" max="59" 
-            // ref={selectRef} 
+            min='0' max='59' 
             name='RestMinutes'
             onChange={(e) => setRestMM(e.target.value)}
             value={restMM}
-            id="options" />
+            id='options' />
         </ BoxContainer>
       );
     case 'restSS':
@@ -201,18 +141,19 @@ export const Input = (props) => {
           </Label>
           <Number
             type='number'
-            min="0" max="59" 
-            // ref={selectRef} 
+            min='0' max='59' 
             name='RestSeconds'
             onChange={(e) => setRestSS(e.target.value)}
             value={restSS}
-            id="options" />
+            id='options' />
         </ BoxContainer>
       );
   }
-  
-
 }
+
+Input.defaultProps = {
+  type: 'number',
+};
 
 export default Input;
 

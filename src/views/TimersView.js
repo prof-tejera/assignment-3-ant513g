@@ -1,85 +1,91 @@
-import React, { useContext, useEffect } from "react";
-import styled from "styled-components";
-import { TimerContext } from "../context/TimerProvider";
-import Navigation from "../components/generic/Navigation";
-import Stopwatch from "../components/timers/Stopwatch";
-import { FlexCenter, Section, Container } from "../utils/containers";
-
-import {
-  // BrowserRouter as
-  //   Router,
-  // Routes,
-  // Route,
-  Link,
-  // useParams
-} from 'react-router-dom';
-// import { useHistory } from "react-router";
-
-import Button from "../components/generic/Button";
-import Queue from "../components/generic/Queue";
-
-
-const TimerWrapper = styled.div`
-  padding: 20px;
-  margin: 10px;
-  font-size: 1.3rem;
-  text-align: center;
-`;
-const NavWrapper = styled.div`
-  position:fixed;
-  bottom: 0;
-  width: 100%;
-`;
-const Div = styled.div`
-margin-bottom: 100px;
-`;
+import React, { useContext } from 'react';
+import { TimerContext } from '../context/TimerProvider';
+import Navigation from '../components/generic/Navigation';
+import { Section, Container, Label } from '../utils/containers';
+import { Panel, LargeText } from '../utils/containers';
+import DisplayTime from '../components/generic/DisplayTime';
+import { Link } from 'react-router-dom';
+import Button from '../components/generic/Button';
+import Queue from '../components/generic/Queue';
 
 const Timer = () => {
   const {
     queue,
-    timers,
-    setTimer,
-    newTimer
+    state,
+    currentRound,
+    TimeDisplay,
+    resting,
   } = useContext(TimerContext);
  
-
-
-  // useEffect(() => {
-  //   queue.map((timer, index) => (
-  //     <TimerWrapper key={timer.id}>
-  //       <h2>{timer.id}{timer.title}</h2>
-  //       {timer.timer}
-  //       <Button onClick={() => {
-  //         queue.splice(index, 1);
-  //       }}>Remove</Button>
-  //     </TimerWrapper>
-  //   ))
-        
-  // });
+  const Rounds = () => {
+    if (queue.length > 0 && queue[0].rounds) {
+      return (
+        <>
+          Round: {currentRound}/{queue[0].rounds}
+        </>
+      );
+    } else {
+      return (null);
+    }
+  }
+  const Resting = () => {
+    if(queue.length > 0 && queue[0].title === 'Tabata') {
+       return (
+      <>
+        <Label> Time Left in { resting ? 'Rest' : 'Round'}:</Label>
+      </>
+    );
+    }else {
+      return (null);
+    }
+  }
   
+  const BeginWorkout = () => {
+    if (!state.isRunning) {
+      return (
+        <>
+          <Container>
+           {queue.length < 1 ? <h1>Create a New Workout!</h1> : ''}
+          </Container>
+          <br />
+          <Container> 
+              <Link to='/add'>
+                <Button type='begin' />
+              </Link>
+          </Container>
+        </>
+      );
+    } else {
+      return (
+        <>
+          {null}
+        </>
+      );
+    }
+  }
   
   return (
     <React.Fragment>
-      <Div>
+      <Section>
+        <Panel>
+          <DisplayTime>
+            <Section>
+            <Rounds />
+              <Section>
+                <LargeText>
+                <Resting />
+                <TimeDisplay />
+                </LargeText>
+              </Section>
+            </Section>
+          </DisplayTime>
+        </Panel>
         <Section>
-          <Container>
-            <h1>Create a New Workout!</h1>
-          </Container>
-          <br />
-          <Container>
-            <Link to="/add">
-              <Button type='begin' />
-            </Link>
-          </Container>
+          <BeginWorkout />
         </Section>
-          <Queue />
-        
-       
-
-        <NavWrapper>
-          <Navigation />
-        </NavWrapper>
-      </Div>
+        <Queue />
+        <Navigation />
+      </Section>
     </React.Fragment>
   );
 };

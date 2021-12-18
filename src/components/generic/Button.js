@@ -1,26 +1,33 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { TimerContext } from '../../context/TimerProvider';
-import Styles from './Styles';
 import Colors from '../../theme/Colors';
+import Typography from '../../theme/Typography';
+import PropTypes from 'prop-types';
+
+const size  = {
+  small: 10,
+  medium: 42,
+  large: 54,
+};
+
 
 const ButtonBase = styled.button `
-  display: inline-flex;
+  display: inline;
   justify-content: center;
   align-content: center;
   vertical-align: middle;
   text-align: center;
-  margin: auto;
-  padding: 0.25rem 1rem;
+  margin: 0.5rem auto;
+  padding: 1rem 2rem;
   width: auto;
-  height: auto;
-  min-width: 40px;
-  line-height: 40px;
+  height: ${(props) => props.size}px;
+  min-width: ${(props) => props.size}px;
   border-radius: 8px;
   
   overflow: auto;
   border: none;
-  font-size: 16px;
+  font-size: ${Typography.default};
   color: ${Colors.white};
   background-color: ${Colors.oceanblue500};
   box-shadow: inset 2px 2px 5px ${Colors.oceanblue400};
@@ -32,23 +39,21 @@ const ButtonBase = styled.button `
   }
   &:active {
     background-color: ${Colors.oceanblue600};
-    font-weight: 600;
+    font-weight: ${Typography.bold};
     box-shadow: ${Colors.pressed};
   }
 `;
 
-
-
 const ButtonSelected = styled(ButtonBase)`
   background-color: ${Colors.oceanblue400};
   box-shadow: inset 1px 1px 5px ${Colors.oceanblue500};
-  font-weight: 600;
+  font-weight: ${Typography.bold};
 `;
 
 const ButtonInactive = styled(ButtonBase)`
   background-color: ${Colors.oceanblue600};
   box-shadow: inset 1px 1px 5px ${Colors.oceanblue700};
-  font-weight: 600;
+  font-weight: ${Typography.bold};
   &:hover {
     background-color: ${Colors.oceanblue700};
     box-shadow: inset 2px 2px 5px ${Colors.oceanblue600};
@@ -82,37 +87,80 @@ const ButtonStop = styled(ButtonBase)`
   }
 `;
 
+const ButtonDone = styled(ButtonStop)`
+  background: ${Colors.orange500};
+  box-shadow: inset 2px 2px 5px ${Colors.orange400};
+  &:hover {
+    background-color: ${Colors.orange600};
+    box-shadow: inset 2px 2px 5px ${Colors.orange500};
+  }
+  &:active {
+    background-color: ${Colors.orange700};
+    box-shadow: ${Colors.pressed};
+  }
+`;
+
 const ButtonArrow = styled(ButtonBase)`
   padding: 0.25rem 0.5rem; 
-  line-height: 20px;
-  width: auto;
-  min-width: 20px;
+  line-height: ${(props) => props.size}px;
+  width: ${(props) => props.size}px;
+  min-width: ${(props) => props.size}px;
   height: auto;
   font-size: 12px;
+  margin: auto;
 `;
 
 const ButtonAdd = styled(ButtonBase)`
   background-color: ${Colors.oceanblue700};
 `;
+
 const ButtonBegin = styled(ButtonBase)`
   background-color: ${Colors.oceanblue700};
   border-radius: 50%;
-  font-weight: 600;
-  width: 120px;
-  height: 120px;
-  padding: 2.25rem;
- 
-  border: solid 2px #6760D2;
-  box-shadow: 0 0 0 8px #2F288F;
-
+  line-height: normal;
+  font-weight: ${Typography.bold};
+  font-size: 16px;
+  width: 160px;
+  height:  160px;
+  display: inline;
+  vertical-align: center;
+  border: solid 2px ${Colors.oceanblue300};
+  box-shadow: 0 0 0 8px ${Colors.oceanblue700};
+  margin: auto;
+  padding: 0;
+  
   &:hover {
+    padding: 2.15rem;
+    font-size: 18px;
     background-color: ${Colors.oceanblue600};
-    box-shadow: 0 0 0 8px #2F288F;
+    box-shadow: 0 0 0 8px ${Colors.oceanblue700};
     box-shadow: inset 2px 2px 5px ${Colors.oceanblue500};
-    transition:.5s ease;
+    transition: .5s ease;
   }
 `;
 
+const ButtonRemove = styled(ButtonBase)`
+  background: ${Colors.surfaceDark};
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  font-size: 24px;
+  line-height: normal;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  min-width: ${(props) => props.size}px;
+  box-shadow: inset 2px 2px 5px ${Colors.surfaceDark};
+  margin: 0;
+
+  &:hover {
+    background-color: ${Colors.gray500};
+    box-shadow: 0 0 0 8px ${Colors.oceanblue500};
+    box-shadow: inset 2px 2px 5px ${Colors.surfaceDark};
+    transition: .5s ease;
+  }
+`;
 
 const Button = (props) => {
   const { children, type, ...buttonProps } = props;
@@ -127,14 +175,13 @@ const Button = (props) => {
     fastForward,
     decrementRounds,
     incrementRounds,
-    selected,
     queue,
   } = useContext(TimerContext);
 
   switch (type) {
     default:
       return (
-        <ButtonBase
+        <ButtonBase size={size}
           {...buttonProps}>
           {children}
         </ButtonBase>
@@ -163,6 +210,16 @@ const Button = (props) => {
           Stop
         </ButtonStop>
       );
+      case 'done':
+        return (
+          <ButtonDone
+            {...buttonProps}
+            onClick={() => {
+              setState({type: 'done'})
+            }}>
+            Done
+          </ButtonDone>
+        );
     case 'lap':
       return (
         <ButtonBase
@@ -211,22 +268,28 @@ const Button = (props) => {
     case 'add':
       return (
         <ButtonAdd
-          {...buttonProps}
-        >
+          {...buttonProps}>
           Add to Queue
         </ButtonAdd>
       );
-    case 'begin':
+      case 'remove':
+        return (
+          <ButtonRemove size='medium'
+            {...buttonProps}
+          >
+            &#x02A2F;
+          </ButtonRemove>
+        );
+    case 'begin': 
     return (
       <ButtonBegin
         {...buttonProps}
-      >
-       Begin
+      > {queue.length === 0 ? 'Begin' : 'Add More'}
       </ButtonBegin>
     );
     case 'arrowUp':
       return (
-        <ButtonArrow
+        <ButtonArrow size='small'
           {...buttonProps}
           onClick={incrementRounds}>
           &#9650;
@@ -234,7 +297,7 @@ const Button = (props) => {
       );
     case 'arrowDown':
       return (
-        <ButtonArrow
+        <ButtonArrow size='small'
           {...buttonProps}
           onClick={decrementRounds}>
           &#9660;
@@ -244,9 +307,13 @@ const Button = (props) => {
   }
 };
 
+Button.propTypes = {
+  size: PropTypes.oneOf(['small', 'medium', 'large', 'xlarge']),
+};
+
 Button.defaultProps = {
-  type: "default",
-  pressed: false,
+  type: 'default',
+  size: 'large'
 };
 
 export default Button;

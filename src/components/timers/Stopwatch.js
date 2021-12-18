@@ -1,11 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import { TimerContext } from '../../context/TimerProvider';
-import { Panel, Section, Label, FlexBetween, LargeText} from '../../utils/containers';
-import { formatTime } from "../../utils/helpers";
-import DisplayTime from "../generic/DisplayTime";
-import Button from "../generic/Button";
-import DisplayRounds from "../generic/DisplayRounds";
-import useInterval from "../../hooks/hooks";
+import { Panel, Section, Label, LargeText} from '../../utils/containers';
+import { formatTime } from '../../utils/helpers';
+import DisplayTime from '../generic/DisplayTime';
 
 //    Stopwatch
 //    A timer that counts up to X amount of time
@@ -13,16 +10,9 @@ import useInterval from "../../hooks/hooks";
 
 const Stopwatch = () => {
   const {
-    state,
     laps,
-    time,
-    setTime,
-    countUp,
-    } = useContext(TimerContext);
-  
-  useInterval(() => {
-    setTime(countUp);
-    }, state.isRunning ? 1000 : null);
+    time
+  } = useContext(TimerContext);
   
   return (
     <Panel>
@@ -32,7 +22,6 @@ const Stopwatch = () => {
           <Label>Current Lap: {laps.length + 1}</Label>
         </Section>
       </DisplayTime>
-      <DisplayRounds />
     </Panel>
   );
 }

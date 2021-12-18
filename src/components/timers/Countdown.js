@@ -1,11 +1,9 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from 'react';
 import { TimerContext } from '../../context/TimerProvider';
-import { Panel, Container, Section, FlexBetween, LargeText } from '../../utils/containers';
-import { formatTime } from "../../utils/helpers";
-import DisplayTime from "../generic/DisplayTime";
-import Button from "../generic/Button";
-import Input from "../generic/Input";
-import { useInterval } from "../../hooks/hooks";
+import { Panel, Container, Section, LargeText } from '../../utils/containers';
+import DisplayTime from '../generic/DisplayTime';
+import Input from '../generic/Input';
+import { format } from '../../utils/helpers';
 
 //  Countdown
 //  A timer that counts down from X amount of time
@@ -14,39 +12,15 @@ import { useInterval } from "../../hooks/hooks";
 const Countdown = () => {
 
   const {
-    time,
-    setTime,
-    state,
-    countDown,
-    getMs,
-    timerDone,
-    timers,
+    timeVal,
   } = useContext(TimerContext);
  
-  
-  const intervalRef = useInterval(() => {
-    if (state.isRunning && time !== 0) {
-      setTime(countDown);
-    } else {
-      window.clearInterval(intervalRef.current);
-      if (time === 0) {
-        timerDone();
-      } 
-    }
-  },  state.isRunning ? 1000 : null );
-
-  useEffect(() => {
-    if (!state.isRunning) {
-      setTime(getMs);
-    } 
-  }, );
-  
   return (
     <Panel>
       <DisplayTime>
         <Section>
           <LargeText>
-            {formatTime(time)}
+            {format(timeVal.hh, timeVal.mm, timeVal.ss)}
          </LargeText>
         </Section>
       </DisplayTime>
@@ -55,12 +29,6 @@ const Countdown = () => {
         <Input value='mm' />
         <Input value='ss' />
       </Container>
-      <Section>
-        {/* <FlexBetween>
-          <Button type={state.isRunning ? 'stop' : 'start'} />
-          <Button type='reset' />
-        </FlexBetween> */}
-      </Section>
     </Panel>
   );
 }
